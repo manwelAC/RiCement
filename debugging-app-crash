@@ -1,0 +1,750 @@
+PS C:\Users\johnm> adb logcat -c; adb logcat | Select-String -Pattern "ricement|error|fatal|exception" -CaseSensitive:$false
+
+01-01 18:23:30.190  1701  1844 W PreStartAppFeature: PreStartAppFeature: com.mxnwel.RiCement
+01-01 18:23:30.194  1701  1844 I ActivityTaskManager: agaresFW preload processName=com.mxnwel.RiCement for
+ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}
+01-01 18:23:30.204  1701  1785 I PowerHalWrapper: amsBoostProcessCreate package:com.mxnwel.RiCement
+01-01 18:23:30.205  1701  1785 W ActivityManager: startProcessLocked, app = ProcessRecord{fb89838
+0:com.mxnwel.RiCement/u0a342}
+01-01 18:23:30.211  1701  1792 D DexOptExtImpl: com.mxnwel.RiCement reason is 22 abi is arm64-v8a
+01-01 18:23:30.214 11723 11723 I mxnwel.RiCement: Using CollectorTypeCMC GC.
+01-01 18:23:30.220 11723 11723 W TranInstanceHelper: Failed to instance
+com.transsion.hubcore.linkplus.implement.app.TranActivityThreadLinkplusImpl, java.lang.ClassNotFoundException:
+com.transsion.hubcore.linkplus.implement.app.TranActivityThreadLinkplusImpl
+01-01 18:23:30.222  1276  1338 D uas-service: thread(pid=11723) com.mxnwel.RiCement is config default uxtag 0x420
+01-01 18:23:30.224  1701  1820 I ActivityManager: Start proc 11723:com.mxnwel.RiCement/u0a342 for activity
+{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}
+01-01 18:23:30.227  1701  2820 D os.ActivityManagerServiceLice: make process active com.mxnwel.RiCement(11723)
+01-01 18:23:30.234  1701  2052 E JobScheduler.Concurrency: Error executing JobStatus{b9bf065
+androidx.work.systemjobscheduler:u0a323/3150
+@androidx.work.systemjobscheduler@com.twitter.android/androidx.work.impl.background.systemjob.SystemJobService u=0
+s=10323 TIME=-13m7s591ms:none NET READY}
+01-01 18:23:30.236 11723 11723 D nativeloader: Configuring clns-7 for other apk
+/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk. target_sdk_version=36,
+uses_libraries=, library_path=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/lib/arm
+64:/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!/lib/arm64-v8a,
+permitted_path=/data:/mnt/expand:/data/user/0/com.mxnwel.RiCement
+01-01 18:23:30.243  2372  2372 I LauncherPreAnalytics: postAthenaEvent tid = 9461 eventName = launcher_icon_click
+bundle = Bundle[{is_folder=0, pkg=com.mxnwel.RiCement, grid=4x6, time=1767263010243, position=2-4, page_num=3,
+location=desktop}]
+01-01 18:23:30.244  1701  2797 E ActivityTaskManager: agaresPreload error: activityInfo is null
+01-01 18:23:30.245  1701  2797 D AppLockLice: onActivityStarterIntercept: callingPackage = com.transsion.XOSLauncher,
+aInfo.packageName:com.mxnwel.RiCement,mComeLockPkgList =[]
+01-01 18:23:30.247  1701  2797 D ActivityTaskManager: TaskLaunchParamsModifier:task=null
+activity=ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity display-from-option=0 display-id=0
+task-display-area-windowing-mode=1 suggested-display-area=DefaultTaskDisplayArea@66795321
+01-01 18:23:30.247  1701  2797 E ActivityTaskManager: AppLaunchTracker getTaskIndex error: task is null.
+01-01 18:23:30.247  1701  2797 D ActivityTaskManager: TaskLaunchParamsModifier:task=null
+activity=ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity t-1} display-from-option=0 display-id=0
+task-display-area-windowing-mode=1 suggested-display-area=DefaultTaskDisplayArea@66795321
+inherit-from-source=fullscreen non-freeform-task-display-area display-area=DefaultTaskDisplayArea@66795321
+activity-requested-portrait freeform-size-mismatch=Rect(285, 708 - 796, 1788)
+01-01 18:23:30.247  1701  2797 I ActivityTaskManager: needHookReparentToDefaultDisplay: sourceRecord =
+ActivityRecord{45605d7 u0 com.transsion.XOSLauncher/com.android.launcher3.uioverrides.QuickstepLauncher t5},r =
+ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity t-1}, tda = null
+01-01 18:23:30.249  1701  2797 D ActivityTaskManager: TaskLaunchParamsModifier:task=Task{c46b15f #378 type=standard
+A=10342:com.mxnwel.RiCement} activity=ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity t-1}
+display-from-option=0 display-id=0 task-display-area-windowing-mode=1
+suggested-display-area=DefaultTaskDisplayArea@66795321 inherit-from-source=fullscreen non-freeform-task-display-area
+display-area=DefaultTaskDisplayArea@66795321 activity-requested-portrait freeform-size-mismatch=Rect(285, 708 - 796,
+1788)
+01-01 18:23:30.250  1116  1180 I BufferQueueDebug: [ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity
+t378}#82980](this:0xb4000079ea982288,id:-1,api:0,p:-1,c:-1) BufferQueue core=(1116:/system/bin/surfaceflinger)
+01-01 18:23:30.251  1701  2797 D os.fingerprint: onTaskMovedToFront Task{c46b15f #378 type=standard
+A=10342:com.mxnwel.RiCement}
+01-01 18:23:30.251  1701  2797 D os.fingerprint: activityComponent =
+ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} inMultiWindow = false
+01-01 18:23:30.252  1701  2797 D TranStartingSurfaceController: hookAddStartingWindow
+activityRecord=ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity t378} snapshot=null type=2
+01-01 18:23:30.252  5073 23901 I ScenesManager: handlerTaskChange new TaskId com.mxnwel.RiCement378 old TaskId
+01-01 18:23:30.252  5073 23901 I SmartPanelService: onTaskCreated mCreateTaskId = com.mxnwel.RiCement378
+01-01 18:23:30.255  1701  2797 D TranStartingSurfaceController: addStartingSurface
+activityRecord=ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity t378}
+mCurrentTranStartingSurface=com.android.server.wm.TranStartingSurface@7ddd39d type=2
+01-01 18:23:30.255  1701  2797 D TranStartingSurfaceController: activityRecord ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378} is ShowStartingSurface res=true
+01-01 18:23:30.255  1701  2797 W ActivityTaskManager: Add starting :ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378} startingData=SplashScreenStartingData{85b2012
+waitForSyncTransactionCommit=false removeAfterTransaction= 0}
+01-01 18:23:30.255  1701  2797 I PowerHalWrapper: amsBoostNotify
+pid:2372,activity:com.android.launcher3.uioverrides.QuickstepLauncher, package:com.transsion.XOSLauncher,
+mProcessCreatePackcom.mxnwel.RiCement
+01-01 18:23:30.256  2381  2462 D TranSplashScreenManager: modifySuggestType 1 => 1 for ActivityInfo{9ce271c
+com.mxnwel.RiCement.MainActivity}
+01-01 18:23:30.256  1701  2797 I PowerHalWrapper: <amsBoostResume> last:com.transsion.XOSLauncher,
+next:com.mxnwel.RiCementhasATProcess:false
+01-01 18:23:30.258  1701  2797 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN
+cat=[android.intent.category.LAUNCHER] flg=0x10200000 pkg=com.mxnwel.RiCement cmp=com.mxnwel.RiCement/.MainActivity
+bnds=[540,1388][798,1690] (has extras)} with LAUNCH_SINGLE_TASK from uid 10173 (BAL_ALLOW_VISIBLE_WINDOW) result code=0
+01-01 18:23:30.258  1701  2797 I ActivityTaskManager: Add pending draw ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378}
+01-01 18:23:30.258  1701  1839 E TranCPUBooster: java.lang.IllegalArgumentException: Invalid argument: 25750
+01-01 18:23:30.262  5073 23901 I SmartPanelService: activityCheck pkgName: com.mxnwel.RiCement, className:
+com.mxnwel.RiCement.MainActivity isResume=false isDrawn = false
+01-01 18:23:30.263  2381  2427 V WindowManagerShell: Transition requested (#3626): android.os.BinderProxy@5249908
+TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=378 displayId=0 isRunning=true
+baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000
+pkg=com.mxnwel.RiCement cmp=com.mxnwel.RiCement/.MainActivity }
+baseActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}
+topActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} origActivity=null
+realActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} numActivities=1
+lastActiveTime=167303016 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1
+defaultMinSize=110 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@b65c8a1} topActivityType=1
+pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1
+displayCutoutSafeInsets=Rect(0, 108 - 0, 0) topActivityInfo=ActivityInfo{afdaac6 com.mxnwel.RiCement.MainActivity}
+launchCookies=[android.os.BinderProxy@32e3a87] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false
+isVisible=false isVisibleRequested=false isSleeping=false locusId=null displayAreaFeatureId=1
+isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false
+topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= false isLetterboxDoubleTapEnabled= false
+topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false
+topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=1080
+topActivityLetterboxHeight=2436 isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false
+cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden freeformCameraCompatMode=inactive}}},
+pipTask = null, remoteTransition = RemoteTransition { remoteTransition =
+android.window.IRemoteTransition$Stub$Proxy@bee3db4, appThread = android.app.IApplicationThread$Stub$Proxy@8754ddd,
+debugName = QuickstepLaunch }, displayChange = null, flags = 0, debugId = 3626 }
+01-01 18:23:30.263  2381  2462 D VRI[RiCement]: hardware acceleration = true, forceHwAccelerated = false
+01-01 18:23:30.264  2381  2462 D ViewRootImpl: setView appearance:0 Splash Screen com.mxnwel.RiCement
+01-01 18:23:30.266  2372  2372 I TopTaskTracker: onTaskMovedToFront: (moved taskInfo to front) taskId=378,
+baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000
+pkg=com.mxnwel.RiCement cmp=com.mxnwel.RiCement/.MainActivity }
+01-01 18:23:30.266 11723 11723 W SoLoader: Recording new base apk path:
+/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk
+01-01 18:23:30.267 11723 11723 I SoLoader: Preparing SO source: DirectApkSoSource[root =
+[/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!/lib/arm64-v8a]]
+01-01 18:23:30.268 11723 11723 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root =
+/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/lib/arm64 flags = 0]]
+01-01 18:23:30.273 11723 11723 D nativeloader: Load /data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSiz
+lzUurh09oouA==/base.apk!/lib/arm64-v8a/libc++_shared.so using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.276 11723 11723 D nativeloader: Load
+/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!/lib/arm64-v8a/libjsi.so
+using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.278 11723 11723 D nativeloader: Load
+/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!/lib/arm64-v8a/libfbjni.so
+using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.280 11723 11723 D nativeloader: Load /data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSiz
+lzUurh09oouA==/base.apk!/lib/arm64-v8a/libreactnative.so using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.281  1116  1180 I BufferQueueDebug: [316b5d1 Splash Screen
+com.mxnwel.RiCement#82982](this:0xb4000079ea8b2478,id:-1,api:0,p:-1,c:-1) BufferQueue
+core=(1116:/system/bin/surfaceflinger)
+01-01 18:23:30.285 11723 11723 D nativeloader: Load /data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSiz
+lzUurh09oouA==/base.apk!/lib/arm64-v8a/libreact_codegen_rnscreens.so using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.287 11723 11723 D nativeloader: Load /data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSiz
+lzUurh09oouA==/base.apk!/lib/arm64-v8a/libreact_codegen_safeareacontext.so using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.289 11723 11723 D nativeloader: Load /data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSiz
+lzUurh09oouA==/base.apk!/lib/arm64-v8a/libappmodules.so using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.290  1701  2283 D os.fingerprint: onActivityResume next:ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378}
+01-01 18:23:30.290  1701  2283 D os.fingerprint: activityComponent =
+ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} inMultiWindow = false
+01-01 18:23:30.290  1701  2283 D AppLockLice: onActivityResume: packageName = com.mxnwel.RiCement,mComeLockPkgList
+=[],mPreLockPkgList =[]
+01-01 18:23:30.290  1701  2283 D TranMemcgComponentImpl: write pid:11723 (com.mxnwel.RiCement)  to ljj
+01-01 18:23:30.292  1701  2283 D os.fingerprint: onRealStartActivityLocked next:ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378} isKeyguardShowing:false
+01-01 18:23:30.292  1701  2283 D os.fingerprint: activityComponent =
+ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} inMultiWindow = false
+01-01 18:23:30.292  1701  2283 D os.fingerprint: onUpdateFocusedApp oldPackageName:com.transsion.XOSLauncher
+oldComponent:ComponentInfo{com.transsion.XOSLauncher/com.android.launcher3.uioverrides.QuickstepLauncher}
+newPackageName:com.mxnwel.RiCement newComponent:ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}
+mFm :android.hardware.fingerprint.FingerprintManager@90a30b1
+01-01 18:23:30.292  5073 23901 I SmartPanelService: activityCheck pkgName: com.mxnwel.RiCement, className:
+com.mxnwel.RiCement.MainActivity isResume=false isDrawn = false
+01-01 18:23:30.293  1701  1917 I Usf/appStateManager: handleUpdateTaskOverLap uid: 10342
+packageName:com.mxnwel.RiCement remove
+01-01 18:23:30.293  1701  2283 I TranSCSourceConnectManagerImpl: hookDisplayResumedActivityChanged displayId: 0
+packageName: com.mxnwel.RiCement
+01-01 18:23:30.293  1701  2283 D tranpm/BehaviorManager:  onAppLaunch nextPackName = com.mxnwel.RiCement currPackName
+= com.transsion.XOSLauncher
+01-01 18:23:30.293  1701  2283 I PowerHalWrapper: amsBoostNotify pid:11723,activity:com.mxnwel.RiCement.MainActivity,
+package:com.mxnwel.RiCement, mProcessCreatePackcom.mxnwel.RiCement
+01-01 18:23:30.294  1701  2283 I ScnModule: [GameDetection] packname: com.mxnwel.RiCement, apkSize: 90429708.
+01-01 18:23:30.294  1701  2283 I mtkpower_client: [PowerHal_Wrap_notifyAppState]
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity pid=11723 activityId:24001977 state:1
+01-01 18:23:30.294  1701  2283 I mtkpower_client: [Legacy][PowerHal_Wrap_notifyAppState]
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity pid=11723 state:24001977
+01-01 18:23:30.294  1053  1133 I libPowerHal: [perfNotifyAppState] pack:com.mxnwel.RiCement,
+act:com.mxnwel.RiCement.MainActivity, state:1, pid:11723, uid:10342, fps:-1
+01-01 18:23:30.294  1053  1133 I libPowerHal: [perfNotifyAppState] foreground:com.mxnwel.RiCement, pid:11723, uid:10342
+01-01 18:23:30.294  1053  1133 I UxUtility: notifyForegroundApp pack:com.mxnwel.RiCement, uid:10342
+01-01 18:23:30.294  1053  1133 I TouchUtility: notifyAppState error = NULL
+01-01 18:23:30.294  1053  1075 I mtkpower@impl: [notifyAppState] pc:1, com.transsion.XOSLauncher => com.mxnwel.RiCement
+01-01 18:23:30.295  1701  2283 I System.out: [scale_ufs_gear] pakname is not antutu: com.mxnwel.RiCement, file is not
+exist: false
+01-01 18:23:30.295  1701  2283 D os.fingerprint: onActivityResume next:ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378}
+01-01 18:23:30.295  1701  2283 D os.fingerprint: activityComponent =
+ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} inMultiWindow = false
+01-01 18:23:30.298  1701  2283 D ActivityTaskManager: TaskProcess setRealTask mRealTask#=Task{c46b15f #378
+type=standard A=10342:com.mxnwel.RiCement}
+01-01 18:23:30.298  1701  2283 D TranStartingSurfaceController: isShowStartingSurfaceForColdStart activityRecord
+ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity t378} ShowStartingSurface=true
+01-01 18:23:30.298  1701  2235 D PowerManagerService: onAppLaunch: currentPackage=com.transsion.XOSLauncher,
+nextPackage=com.mxnwel.RiCement.
+01-01 18:23:30.298  1701  2283 D TranStartingSurfaceController: executeAppTransitionIfNeeded set ready true
+activityRecord:ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity t378}
+01-01 18:23:30.298  1701  3376 I TranTp/TranTpSwitchManagerImpl: Set [com.mxnwel.RiCement] is tp rate as default.
+01-01 18:23:30.299  1701  3376 W System.err: java.io.FileNotFoundException: /proc/report_rate_switch: open failed:
+ENOENT (No such file or directory)
+01-01 18:23:30.299  1701  3376 W System.err: Caused by: android.system.ErrnoException: open failed: ENOENT (No such
+file or directory)
+01-01 18:23:30.299  1701  2342 D TranAppm/MEMCModule-11: currentPackage = com.mxnwel.RiCement
+01-01 18:23:30.299  1701  2342 D TranAppm/EsportsThermalModule:  AppSwitchListener from com.transsion.XOSLauncher to
+com.mxnwel.RiCement
+01-01 18:23:30.299  1701  2342 D TranAppm/EnvThermalPredictorModule:  AppSwitchListener from com.transsion.XOSLauncher
+to com.mxnwel.RiCement
+01-01 18:23:30.301  1701  2283 D BLASTSyncEngine: skip sync when startingsurface has drawn wc=Task{c46b15f #378
+type=standard A=10342:com.mxnwel.RiCement}
+01-01 18:23:30.301  1701  2283 D BLASTSyncEngine: skip sync when startingsurface has drawn wc=ActivityRecord{16e3db9
+u0 com.mxnwel.RiCement/.MainActivity t378}
+01-01 18:23:30.301  1701  2283 D TranStartingSurfaceController: waitForSyncTransactionCommit
+activityRecord:ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity t378}
+mCurrentTranStartingSurface:com.android.server.wm.TranStartingSurface@7ddd39d
+01-01 18:23:30.301  1701  2283 D TranStartingSurfaceController: showStartingSurface
+mCurrentTranStartingSurface=com.android.server.wm.TranStartingSurface@7ddd39d activityRecord=ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378}
+01-01 18:23:30.303  1701  2283 D TranDynamicBarAnimControllerImpl: updateFlagsFromDynamicIslandToWindow
+pkgName:com.mxnwel.RiCement mStartFromDynamicIsland:false mDynamicIslandPkgName:com.instagram.android
+01-01 18:23:30.303  1701  2283 I Transition: updateFlagsFromDynamicIslandToWindow pkgName = com.mxnwel.RiCement
+flagsArr[0] = 0
+01-01 18:23:30.304  1701  1782 V WindowManager: Sent Transition (#3626) createdAt=01-01 18:23:30.247 via
+request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=378 displayId=0 isRunning=true
+baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000
+pkg=com.mxnwel.RiCement cmp=com.mxnwel.RiCement/.MainActivity }
+baseActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}
+topActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} origActivity=null
+realActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} numActivities=1
+lastActiveTime=167303016 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1
+defaultMinSize=110 token=WCT{RemoteToken{43b4e48 Task{c46b15f #378 type=standard A=10342:com.mxnwel.RiCement}}}
+topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1
+lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 108 - 0, 0) topActivityInfo=ActivityInfo{2ca74e1
+com.mxnwel.RiCement.MainActivity} launchCookies=[android.os.BinderProxy@6d68206] positionInParent=Point(0, 0)
+parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isSleeping=false locusId=null
+displayAreaFeatureId=1 isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo {
+topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= false
+isLetterboxDoubleTapEnabled= false topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed=
+false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition=
+-1 topActivityLetterboxWidth=1080 topActivityLetterboxHeight=2436 isUserFullscreenOverrideEnabled=false
+isSystemFullscreenOverrideEnabled=false cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden
+freeformCameraCompatMode=inactive}}}, pipTask = null, remoteTransition = RemoteTransition { remoteTransition =
+android.window.IRemoteTransition$Stub$Proxy@b9760c7, appThread = android.app.IApplicationThread$Stub$Proxy@fdb06f4,
+debugName = QuickstepLaunch }, displayChange = null, flags = 0, debugId = 3626 }
+01-01 18:23:30.304  1701  1782 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = []
+errorCallbackToken=null taskFragmentOrganizer=null mInterrupt=false }
+01-01 18:23:30.305  1701  1782 V WindowManager:         {WCT{RemoteToken{43b4e48 Task{c46b15f #378 type=standard
+A=10342:com.mxnwel.RiCement}}} m=OPEN f=NONE leash=Surface(name=Task=378)/@0xd66dc3a sb=Rect(0, 0 - 1080, 2436)
+eb=Rect(0, 0 - 1080, 2436) mSimplifyStartAbsBounds=Rect(0, 0 - 0, 0) d=0 taskParent=-1},
+01-01 18:23:30.307  1701  2797 D CoreBackPreview: Window{316b5d1 u0 Splash Screen com.mxnwel.RiCement}: Setting back
+callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@77f7b66, mPriority=0,
+mIsAnimationCallback=false}
+01-01 18:23:30.308  1116  1180 I BufferQueueDebug: [Splash Screen
+com.mxnwel.RiCement#82987](this:0xb4000079ea9799d8,id:-1,api:0,p:-1,c:-1) BufferQueue
+core=(1116:/system/bin/surfaceflinger)
+01-01 18:23:30.308  2372  2677 I TrFloatingIconSurface: on load, RiCement
+01-01 18:23:30.310  1701  2907 D WindowManager: updateSystemBarAttributes appearance:24, win appearance:24,
+opaqueAppearance:0, win:Window{316b5d1 u0 Splash Screen com.mxnwel.RiCement},
+appearanceRegions=[AppearanceRegion{LIGHT_STATUS_BARS bounds=[0,0][1080,2436]}]
+01-01 18:23:30.311  1701  2907 D TranStartingSurfaceController: activityRecord ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378} is ShowStartingSurface res=true
+01-01 18:23:30.311  1116  2987 I BufferQueueDebug: [8d4d5fe ActivityRecordInputSink
+com.mxnwel.RiCement/.MainActivity#82989](this:0xb4000079ea895cd8,id:-1,api:0,p:-1,c:-1) BufferQueue
+core=(1116:/system/bin/surfaceflinger)
+01-01 18:23:30.312  1701  1786 I ActivityTaskManager: this = Task{c46b15f #378 type=standard
+A=10342:com.mxnwel.RiCement} is in Transition
+01-01 18:23:30.314  1701  1819 E TranExceptionReporterComponentImpl: init: ro.product.succ.bbcollect.log.support==1
+01-01 18:23:30.314  2381  2462 D BLASTBufferQueue: [VRI[RiCement]#4886](f:0,a:0) constructor()
+01-01 18:23:30.314  2381  2462 D BLASTBufferQueue: [VRI[RiCement]#4886](f:0,a:0) update width=1080 height=2436
+format=-3 mTransformHint=0
+01-01 18:23:30.314  1701  1819 E TranExceptionReporterComponentImpl: init: ro.product.succ.bbcollect.log.support==1
+01-01 18:23:30.319  2372  2372 W TrBubbleTextView: RiCement setIconVisible: false
+01-01 18:23:30.322  5073 23901 I SmartPanelService: activityCheck pkgName: com.mxnwel.RiCement, className:
+com.mxnwel.RiCement.MainActivity isResume=true isDrawn = false
+01-01 18:23:30.324  4558  5249 I SimpleEventAdapt: onActivityEvent get com.mxnwel.RiCement,
+com.mxnwel.RiCement.MainActivity,true
+01-01 18:23:30.325  2381  2534 D BLASTBufferQueue: [VRI[RiCement]#4886](f:0,a:1) acquireNextBufferLocked
+size=1080x2436 mFrameNumber=1 applyTransaction=true mTimestamp=160306006011554(auto) mPendingTransactions.size=0
+graphicBufferId=10226317170875 transform=0
+01-01 18:23:30.326  2381  2381 I StatusBarModePerDisplayRepository: isInFullscreenMode:false com.mxnwel.RiCement
+01-01 18:23:30.330  4558  5249 I SimpleEventAdapt: onAppForegroundEvent get com.mxnwel.RiCement, true
+01-01 18:23:30.330  4558  5249 I SimpleEventAdapt: onAppStartEvent get com.mxnwel.RiCement,start true
+01-01 18:23:30.330  4558  9629 I Kolun_AI: SystemEventSubscribe: onPublishData {"type":"activity_event","time":17672630
+10324,"data":"{\"className\":\"com.mxnwel.RiCement.MainActivity\",\"isResumed\":true,\"packageName\":\"com.mxnwel.RiCem
+ent\"}","provider":"dc","dc_version":2030380000,"data_version":1,"user_id":0}
+01-01 18:23:30.334  4558  4895 I Kolun_AI: AIM_AppRecManager:new appEvent AppEvent{pkg=com.mxnwel.RiCement
+startTime=2026-01-01 18:22:43.251 duration=47083}
+01-01 18:23:30.335  4558  4895 I Kolun_AI: AIM_AppServiceManager:updateLastOneHourApps: 58 com.mxnwel.RiCement
+01-01 18:23:30.336  4558  9629 I Kolun_AI: SystemEventSubscribe: onPublishData {"type":"app_foreground","time":17672630
+10334,"data":"{\"isForeground\":true,\"packageName\":\"com.mxnwel.RiCement\"}","provider":"dc","dc_version":2030380000,
+"data_version":1,"user_id":0}
+01-01 18:23:30.336  1701  2867 D WindowManager: System monitor finishDrawingWindow w: Window{316b5d1 u0 Splash Screen
+com.mxnwel.RiCement}; mDrawState = DRAW_PENDING
+01-01 18:23:30.336  4558  9629 I Kolun_AI: SystemEventSubscribeheh:SimpleEventBus post event
+AppForegroundEvent{mPackageName='com.mxnwel.RiCement', mIsForeground=true} 1767263010334
+01-01 18:23:30.336  1701  5105 D TranStartingSurfaceController: onSyncTransactionCommitted
+activityRecord:ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity t378}
+mCurrentTranStartingSurface:com.android.server.wm.TranStartingSurface@7ddd39d
+01-01 18:23:30.337  4558  4895 I Kolun_AI: SceneIdentify:onBusEvent AppForegroundEvent   com.mxnwel.RiCement, true,
+SceneIdentify
+01-01 18:23:30.337  4558  4895 I Kolun_AI: SceneIdentify:checkShortVideo com.mxnwel.RiCement true
+01-01 18:23:30.337  4558  4895 I Kolun_AI: SceneIdentify:checkGameIn  com.mxnwel.RiCement,
+01-01 18:23:30.337  4558  4895 I Kolun_AI: SceneIdentify:checkSocialIn  com.mxnwel.RiCement,
+01-01 18:23:30.337  4558  4895 I Kolun_AI: TipsSceneService:event com.mxnwel.RiCement
+01-01 18:23:30.337  4558  4895 I Kolun_AI: AppPredictManager:onBusEvent com.mxnwel.RiCement true
+01-01 18:23:30.341 11723 12064 D libMEOW : applied 1 plugins for [com.mxnwel.RiCement]:
+01-01 18:23:30.342 11723 11723 D ActivityThread: ++
+activityComponent:com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity counts:1 ALEAK_CLEAR_SUPPORT:true
+01-01 18:23:30.349  1701  1786 D WindowManager: hookStartingWindowHasShown should apply again startingwindow
+mSurfaceControl=Surface(name=Splash Screen com.mxnwel.RiCement)/@0xa1a2923
+01-01 18:23:30.352  1053  1075 D AppFlingMode: [CheckAppFlingHint] 101 com.mxnwel.RiCement -1
+01-01 18:23:30.379 11723 12071 D nativeloader: Load
+/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!/lib/arm64-v8a/libhermes.so
+using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.380 11723 12071 D nativeloader: Load /data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSiz
+lzUurh09oouA==/base.apk!/lib/arm64-v8a/libhermestooling.so using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.390  1116  1181 D SurfaceFlinger: [SF client] NEW(0xb4000079ca69af80) for (11723:com.mxnwel.RiCement)
+01-01 18:23:30.407  1276  1338 D uas-service: thread(pid=12061) com.mxnwel.RiCement is config default uxtag 0x420
+01-01 18:23:30.411 11723 11723 D ViewRootImpl: setView appearance:0
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity
+01-01 18:23:30.415  1116  2987 I BufferQueueDebug: [74c310f
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity#82993](this:0xb4000079ea823e58,id:-1,api:0,p:-1,c:-1) BufferQueue
+core=(1116:/system/bin/surfaceflinger)
+01-01 18:23:30.419  1701  5105 I TranThermalBacklightCtrl: cur package [com.mxnwel.RiCement] is in
+TemperatureControlWhitelist
+01-01 18:23:30.421  1701  5105 D CoreBackPreview: Window{74c310f u0
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}: Setting back callback
+OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@1483a5d, mPriority=0,
+mIsAnimationCallback=false}
+01-01 18:23:30.421  1116  1181 I BufferQueueDebug:
+[com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity#82994](this:0xb4000079eaa46a58,id:-1,api:0,p:-1,c:-1)
+BufferQueue core=(1116:/system/bin/surfaceflinger)
+01-01 18:23:30.425  1701  5102 W WindowManager: Changing focus from null to Window{74c310f u0
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} displayId=0
+Callers=com.android.server.wm.RootWindowContainer.updateFocusedWindowLocked:528
+com.android.server.wm.WindowManagerService.updateFocusedWindowLocked:6847
+com.android.server.wm.WindowManagerService.relayoutWindowInner:2854
+com.android.server.wm.WindowManagerService.relayoutWindow:2515
+01-01 18:23:30.425  1701  5102 D WindowManager: notifyAppOnFocusChange focusedWindow =
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity mFocusChangeCallback =
+android.window.IFocusChangeCallback$Stub$Proxy@2db055b
+01-01 18:23:30.427  1701  5102 D WindowManager: updateSystemBarAttributes appearance:16, win appearance:0,
+opaqueAppearance:0, win:Window{74c310f u0 com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity},
+appearanceRegions=[AppearanceRegion{LIGHT_STATUS_BARS bounds=[0,0][1080,2436]}]
+01-01 18:23:30.427  1701  5102 D TranDisplayJamMonitor: starting window overlay on focus window.
+WindowInfo:Window{316b5d1 u0 Splash Screen com.mxnwel.RiCement}
+01-01 18:23:30.427  1701  5102 D TranDisplayJamMonitor: checkExceptionWindowResult = 1041
+01-01 18:23:30.427  1701  5102 D TranDisplayJamMonitor: check display window jam detection:Window{74c310f u0
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}
+01-01 18:23:30.428  1701  5102 I WindowManager: Relayout Window{74c310f u0
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}: oldVis=4 newVis=0 focusMayChange = true requestedWidth = 1080
+requestedHeight = 2436 outFrames = ClientWindowFrames{frame=[0,0][1080,2436] display=[0,0][1080,2436]
+parentFrame=[0,0][0,0]} outSurfaceControl =
+Surface(name=com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity)/@0x5531f59
+01-01 18:23:30.428  1701  1786 D SurfaceComposerClient: Transaction::apply InputWindowCommands.focusRequests
+timestamp=160306109046324, windowName=74c310f com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity
+01-01 18:23:30.432  2381  2381 I StatusBarModePerDisplayRepository: isInFullscreenMode:false com.mxnwel.RiCement
+01-01 18:23:30.433 11723 12061 D libMEOW : applied 1 plugins for [com.mxnwel.RiCement]:
+01-01 18:23:30.434  1116  1116 D SurfaceFlinger: Focus addInputWindowCommands timestamp=160306109046324,
+windowName=74c310f com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity
+01-01 18:23:30.437  1116  2071 D SurfaceFlinger: updateWinowInfo=1, setFocusedWindow timestamp=160306109046324,
+windowName=74c310f com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity
+01-01 18:23:30.443  5073  5073 I ScenesManager: handlerTaskChange new TaskId com.mxnwel.RiCement378 old TaskId
+com.mxnwel.RiCement378
+01-01 18:23:30.446 11723 12072 D nativeloader: Load /data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSiz
+lzUurh09oouA==/base.apk!/lib/arm64-v8a/libexpo-modules-core.so using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.451  1701  2502 D WindowManager: updateSystemBarAttributes appearance:16, win appearance:0,
+opaqueAppearance:0, win:Window{74c310f u0 com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity},
+appearanceRegions=[AppearanceRegion{LIGHT_STATUS_BARS bounds=[0,0][1080,2436]}]
+01-01 18:23:30.452  5073  6652 I ScenesManager: put createTaskId com.mxnwel.RiCement378
+01-01 18:23:30.455  5073  6652 D THubApi : getWindowingMode TaskInfo{userId=0 taskId=378 displayId=0 isRunning=true
+baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000
+pkg=com.mxnwel.RiCement cmp=com.mxnwel.RiCement/.MainActivity }
+baseActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}
+topActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} origActivity=null
+realActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} numActivities=1
+lastActiveTime=167303217 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1
+defaultMinSize=110 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@46c8de5} topActivityType=1
+pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1
+displayCutoutSafeInsets=null topActivityInfo=ActivityInfo{99260ba com.mxnwel.RiCement.MainActivity}
+launchCookies=[android.os.BinderProxy@6a80b6b] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=true
+isVisible=true isVisibleRequested=true isSleeping=false locusId=null displayAreaFeatureId=1
+isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false
+topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= false isLetterboxDoubleTapEnabled= false
+topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false
+topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=1080
+topActivityLetterboxHeight=2436 isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false
+cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden freeformCameraCompatMode=inactive}}}
+01-01 18:23:30.457  5073  6652 I THubApi : isTheMainScreen classname: com.mxnwel.RiCement.MainActivity
+pkg:com.mxnwel.RiCement
+01-01 18:23:30.459  1701  5105 D TranActivityTaskManagerService: isTheMainScreen, displayId = 0, classname =
+com.mxnwel.RiCement.MainActivity
+01-01 18:23:30.463  5073  6652 D THubApi : getUserId TaskInfo{userId=0 taskId=378 displayId=0 isRunning=true
+baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000
+pkg=com.mxnwel.RiCement cmp=com.mxnwel.RiCement/.MainActivity }
+baseActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}
+topActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} origActivity=null
+realActivity=ComponentInfo{com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} numActivities=1
+lastActiveTime=167303217 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1
+defaultMinSize=110 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@46c8de5} topActivityType=1
+pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1
+displayCutoutSafeInsets=null topActivityInfo=ActivityInfo{99260ba com.mxnwel.RiCement.MainActivity}
+launchCookies=[android.os.BinderProxy@6a80b6b] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=true
+isVisible=true isVisibleRequested=true isSleeping=false locusId=null displayAreaFeatureId=1
+isTopActivityTransparent=false appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false
+topActivityEligibleForLetterboxEducation= falseisLetterboxEducationEnabled= false isLetterboxDoubleTapEnabled= false
+topActivityEligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false
+topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=1080
+topActivityLetterboxHeight=2436 isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false
+cameraCompatTaskInfo=CameraCompatTaskInfo { cameraCompatControlState=hidden freeformCameraCompatMode=inactive}}}
+01-01 18:23:30.463  5073  6278 I ScenesManager: ScenesInfo(isInSplitScreenMode=false, screenMode=0, oldTopPackage=,
+oldTopClass=, oldRelPackage=, oldRelClass=, topPackage=com.mxnwel.RiCement, topClass=com.mxnwel.RiCement.MainActivity,
+relPackage=com.mxnwel.RiCement, relClass=com.mxnwel.RiCement.MainActivity, taskId=378, userId=0, isTwinApp=false,
+isActivityChange=true, isResume=false, killPackages=[], isPersonalizedFlipScreen=false, timeStamp=1767263010463)
+01-01 18:23:30.465  5073  6278 I GameSceneManager: handlerActivityStart isResume = false  pkgName = com.mxnwel.RiCement
+01-01 18:23:30.465  5073  6278 I VideoSceneManager: handlerVideoStart isResume = false  currentPackage =   pkgName =
+com.mxnwel.RiCement
+01-01 18:23:30.465  5073  6278 D TurboSceneManager: handlerActivityStart: pkg = com.mxnwel.RiCement
+01-01 18:23:30.465  5073  6278 D TurboSceneManager: handlerTurboStart  currentPackage = com.transsion.XOSLauncher
+pkgName = com.mxnwel.RiCement  className = com.mxnwel.RiCement.MainActivity
+01-01 18:23:30.468  5073  6278 D AppBlackList: checkInBlackList inBlackList= false∩╝î pkgAndCls=
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity
+01-01 18:23:30.542 11723 12072 D nativeloader: Load /data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSiz
+lzUurh09oouA==/base.apk!/lib/arm64-v8a/librnscreens.so using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.569 11723 12072 D nativeloader: Load /data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSiz
+lzUurh09oouA==/base.apk!/lib/arm64-v8a/libworklets.so using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.584 11723 12072 D nativeloader: Load /data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSiz
+lzUurh09oouA==/base.apk!/lib/arm64-v8a/libreanimated.so using class loader ns clns-7
+(caller=/data/app/~~mDFkmDzJZnZdkzRUtXY45w==/com.mxnwel.RiCement-moG71eZSizlzUurh09oouA==/base.apk!classes2.dex): ok
+01-01 18:23:30.588  1701  2228 D TranAppBrightnessChangeController: [onForegroundAppchange] ForegroundPackage:
+com.mxnwel.RiCement splitScreen: false multiWindow: false mIsPinned:false
+01-01 18:23:30.646 11723 12072 E ReactNativeJS: [Error: Incompatible React versions: The "react" and
+"react-native-renderer" packages must have the exact same version. Instead got:
+01-01 18:23:30.650 11723 12073 W unknown:BridgelessReact: ReactHost{0}.handleHostException(message = "Error:
+Incompatible React versions: The "react" and "react-native-renderer" packages must have the exact same version.
+Instead got:
+01-01 18:23:30.651 11723 12073 E AndroidRuntime: FATAL EXCEPTION: mqt_v_native
+01-01 18:23:30.651 11723 12073 E AndroidRuntime: Process: com.mxnwel.RiCement, PID: 11723
+01-01 18:23:30.651 11723 12073 E AndroidRuntime: com.facebook.react.common.JavascriptException: Error: Incompatible
+React versions: The "react" and "react-native-renderer" packages must have the exact same version. Instead got:
+01-01 18:23:30.651 11723 12073 E AndroidRuntime:        at
+com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+01-01 18:23:30.651 11723 12073 I ExceptionHandle: at
+com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+01-01 18:23:30.651 11723 12073 I ExceptionHandle: at com.facebook.jni.NativeRunnable.run(Native Method)
+01-01 18:23:30.651 11723 12073 I ExceptionHandle: at android.os.Handler.handleCallback(Handler.java:959)
+01-01 18:23:30.651 11723 12073 I ExceptionHandle: at android.os.Handler.dispatchMessage(Handler.java:100)
+01-01 18:23:30.651 11723 12073 I ExceptionHandle: at
+com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+01-01 18:23:30.651 11723 12073 I ExceptionHandle: at android.os.Looper.loopOnce(Looper.java:311)
+01-01 18:23:30.651 11723 12073 I ExceptionHandle: at android.os.Looper.loop(Looper.java:408)
+01-01 18:23:30.651 11723 12073 I ExceptionHandle: at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.s
+tartNewBackgroundThread$lambda$1(MessageQueueThreadImpl.kt:175)
+01-01 18:23:30.652 11723 12073 I ExceptionHandle: at
+com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$ldnZnqelhYFctGaUKkOKYj5rxo4(Unknown
+Source:0)
+01-01 18:23:30.652 11723 12073 I ExceptionHandle: at
+com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+01-01 18:23:30.652 11723 12073 I ExceptionHandle: at java.lang.Thread.run(Thread.java:1563)
+01-01 18:23:30.653  1701  2847 I Usf/appStateManager: updateAppCrash, uid=10342, pkg=com.mxnwel.RiCement, crash=true,
+reason=app-crash,crash
+01-01 18:23:30.653 11723 12061 D mxnwel.RiCement: MBrain is disabled
+01-01 18:23:30.653 11723 12061 D mxnwel.RiCement: initMbrain failed
+01-01 18:23:30.657 11723 12061 D mxnwel.RiCement: MBrain is disabled
+01-01 18:23:30.657 11723 12061 D mxnwel.RiCement: initMbrain failed
+01-01 18:23:30.657 11723 12072 E ReactNativeJS: { [TypeError: Cannot read property 'default' of undefined]
+01-01 18:23:30.657 11723 12072 E ReactNativeJS:   isComponentError: true }
+01-01 18:23:30.659  1701  2503 D WindowManager: System monitor finishDrawingWindow w: Window{74c310f u0
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}; mDrawState = DRAW_PENDING
+01-01 18:23:30.660  5073  9139 I SmartPanelService: onWindowsDrawn pkgName: com.mxnwel.RiCement, className:
+com.mxnwel.RiCement.MainActivity launchState=2 windowsDrawnDelayMs =415
+01-01 18:23:30.665  1701  1782 I _T_AppBehavior: APP_START_OCCURRED (pid:11723, packageName:com.mxnwel.RiCement,
+transitionType:8, launchedActivityName:com.mxnwel.RiCement.MainActivity, callerPackage:com.transsion.XOSLauncher,
+currentTransitionDelayMs:59, startingWindowDelayMs:91, bindApplicationDelayMs:-1,
+windowsDrawnDelayMs:415,compilationReason:22, compilationFilter:8 )
+01-01 18:23:30.666  1701  1790 I TranSuccCrashMgr: Post key event: type=0,
+event=wm_activity_launch_time0,com.mxnwel.RiCement/.MainActivity,415, ext=null
+01-01 18:23:30.666  1701  1782 I ActivityTaskManager: Displayed com.mxnwel.RiCement/.MainActivity for user 0: +415ms
+01-01 18:23:30.668  1053  1075 D AppFlingMode: [CheckAppFlingHint] 22 com.mxnwel.RiCement -1
+01-01 18:23:30.670  1053  1075 D AppFlingMode: [CheckAppFlingHint] 30 com.mxnwel.RiCement -1
+01-01 18:23:30.670  1053  1075 D AppFlingMode: [CheckAppFlingHint] 21 com.mxnwel.RiCement -1
+01-01 18:23:30.670  1053  1075 D AppFlingMode: [CheckAppFlingHint] 30 com.mxnwel.RiCement -1
+01-01 18:23:30.671  1116  1181 I BufferQueueDebug: [Surface(name=316b5d1 Splash Screen com.mxnwel.RiCement)/@0x377923a
+- animation-leash of starting_reveal#82996](this:0xb4000079ea9fc9b8,id:-1,api:0,p:-1,c:-1) BufferQueue
+core=(1116:/system/bin/surfaceflinger)
+01-01 18:23:30.674  1701  2094 I ImeTracker: com.mxnwel.RiCement:e8071a10: onRequestHide at ORIGIN_SERVER reason
+HIDE_UNSPECIFIED_WINDOW fromUser false
+01-01 18:23:30.674  1701  2094 I ImeTracker: com.mxnwel.RiCement:e8071a10: onCancelled at PHASE_SERVER_SHOULD_HIDE
+01-01 18:23:30.676  1701  2094 I input_debug: package: com.mxnwel.RiCement mNeedShowSafeInput: false inputType: 0
+methodMap: true isKeyguardShowing: false enable: 0 isSplitScreen: false
+01-01 18:23:30.680  4614  4614 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1311
+onStartInput(EditorInfo{EditorInfo{packageName=com.mxnwel.RiCement, inputType=0, inputTypeString=NULL,
+enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null,
+actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null,
+fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+01-01 18:23:30.682  1701  2503 W PackageConfigPersister: App-specific configuration not found for packageName:
+com.mxnwel.RiCement and userId: 0
+01-01 18:23:30.691  1701  2743 I WindowManager:   onAnimationFinished on win=Window{316b5d1 u0 Splash Screen
+com.mxnwel.RiCement}
+01-01 18:23:30.692  1701  2743 V ActivityTaskManager: Schedule remove starting ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378} startingWindow=Window{316b5d1 u0 Splash Screen com.mxnwel.RiCement}
+animate=false Callers=com.android.server.wm.ActivityRecord.onSplashScreenAttachComplete:3344
+com.android.server.wm.ActivityRecord.splashScreenAttachedLocked:7375
+com.android.server.wm.ActivityClientController.splashScreenAttached:1029
+android.app.IActivityClientController$Stub.onTransact:1382
+com.android.server.wm.ActivityClientController.onTransact:172
+01-01 18:23:30.693  1701  1786 D WindowManager: updateSystemBarAttributes appearance:0, win appearance:0,
+opaqueAppearance:0, win:Window{74c310f u0 com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity},
+appearanceRegions=[AppearanceRegion{LIGHT_STATUS_BARS bounds=[0,0][1080,2436]}]
+01-01 18:23:30.695  2381  2381 I StatusBarModePerDisplayRepository: isInFullscreenMode:false com.mxnwel.RiCement
+01-01 18:23:30.705  2381  2462 D BLASTBufferQueue: [VRI[RiCement]#4886](f:0,a:1) destructor()
+01-01 18:23:30.705  2381  2462 D BufferQueueConsumer: [VRI[RiCement]#4886(BLAST
+Consumer)4886](id:94d00001738,api:0,p:-1,c:2381) disconnect
+01-01 18:23:30.706  1701  2503 D CoreBackPreview: Window{316b5d1 u0 Splash Screen com.mxnwel.RiCement}: Setting back
+callback null
+01-01 18:23:30.706  1701  2743 W InputManager-JNI: Input channel object '316b5d1 Splash Screen com.mxnwel.RiCement
+(client)' was disposed without first being removed with the input manager!
+01-01 18:23:30.706  1701  2743 D WindowManager: setParent old=ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378},new=null,this window=Window{316b5d1 u0 Splash Screen
+com.mxnwel.RiCement},callers=com.android.server.wm.WindowContainer.removeChild:862
+com.android.server.wm.ActivityRecord.removeChild:5351 com.android.server.wm.ActivityRecord.removeChild:482
+com.android.server.wm.WindowContainer.removeImmediately:932 com.android.server.wm.WindowState.removeImmediately:2565
+com.android.server.wm.WindowState.removeIfPossible:2754
+01-01 18:23:30.707  1701  2743 D WindowManager: removeImmediately mActivityRecord: ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378} type: 3
+01-01 18:23:30.707  1701  2743 D ActivityTaskManager: hookRecordSnapshot start pkgName: com.mxnwel.RiCement
+componentName: com.mxnwel.RiCement/.MainActivity mPkgName: null mRecordParams: null
+01-01 18:23:30.707  1701  2743 D WindowManager: postWindowRemoveCleanupLocked: token:ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378} win:Window{316b5d1 u0 Splash Screen com.mxnwel.RiCement} token.isEmpty:false
+token.mPersistOnEmpty:true
+01-01 18:23:30.707  1701  2743 D WindowManager: updateSystemBarAttributes appearance:0, win appearance:0,
+opaqueAppearance:0, win:Window{74c310f u0 com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity},
+appearanceRegions=[AppearanceRegion{ bounds=[0,0][1080,2436]}]
+01-01 18:23:30.708  2381  2381 I StatusBarModePerDisplayRepository: isInFullscreenMode:false com.mxnwel.RiCement
+01-01 18:23:30.719  1116  1116 I SurfaceFlinger: onHandleDestroyed: name=Splash Screen com.mxnwel.RiCement#82987,
+layerId=82987, parentId=0
+01-01 18:23:30.728  1116  1116 I BufferQueueDebug: [Splash Screen
+com.mxnwel.RiCement#82987](this:0xb4000079ea9799d8,id:-1,api:0,p:-1,c:1116) onDestructor()
+01-01 18:23:30.739  1701  2847 I TranSuccCrashMgr: cacheCrashInfo [pkgName = com.mxnwel.RiCement, procName =
+com.mxnwel.RiCement, subject = null, hash = 1148db79e6c576f03cbb479533b2f0ca, type = application_crash, cache_enable =
+false, forceCache = false, stackTrace = com.facebook.react.common.JavascriptException: Error: Incompatible React
+versions: The "react" and "react-native-renderer" packages must have the exact same version. Instead got:
+01-01 18:23:30.739  1701  2847 I TranSuccCrashMgr:      at
+com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.kt:52)
+01-01 18:23:30.739  1701  2847 I ScnModule: [GameDetection] packname: com.mxnwel.RiCement, apkSize: 90429708.
+01-01 18:23:30.739  1701  2847 I mtkpower_client: [PowerHal_Wrap_notifyAppState]
+com.mxnwel.RiCement/com.mxnwel.RiCement pid=11723 activityId:11723 state:3
+01-01 18:23:30.739  1701  2847 I mtkpower_client: [Legacy][PowerHal_Wrap_notifyAppState]
+com.mxnwel.RiCement/com.mxnwel.RiCement pid=11723 state:11723
+01-01 18:23:30.740  1053  1133 I libPowerHal: [perfNotifyAppState] pack:com.mxnwel.RiCement, act:com.mxnwel.RiCement,
+state:3, pid:11723, uid:10342, fps:-1
+01-01 18:23:30.740  1053  1133 I libPowerHal: [perfNotifyAppState] pack:com.mxnwel.RiCement, pid:11723, STATE_DEAD
+01-01 18:23:30.740  1701  2847 E TranExceptionReporterComponentImpl: init: ro.product.succ.bbcollect.log.support==1
+01-01 18:23:30.740  1701  2847 E TranExceptionReporterComponentImpl: init: ro.product.succ.bbcollect.log.support==1
+01-01 18:23:30.742  1701 12097 W AES     : Exception Log handling...data_app_crash
+01-01 18:23:30.742  1701 12097 W AES     : Exception Log handling...
+01-01 18:23:30.743  1701 12097 D AES     : ExceptionLog: notify aed, process:com.mxnwel.RiCement pid:11723
+cause:data_app_crash
+01-01 18:23:30.743 10643 10716 I TABE.AppAprController: JE summary = com.facebook.react.common.JavascriptException
+Error Incompatible React versions The react and react native renderer packages must have the exact same version.
+Instead got[a4:13;]
+01-01 18:23:30.746  1701  2847 D TABE.TranAppRecoveryManager: checkCanRecoveryWhenError: com.mxnwel.RiCement expType:
+crash
+01-01 18:23:30.746  1701  2847 I TABE.TranAppRecoveryManager: ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378} unsupported recovery
+01-01 18:23:30.747  1701  2847 W ActivityTaskManager:   Force finishing activity com.mxnwel.RiCement/.MainActivity
+01-01 18:23:30.747  1701  1793 D TABE-TranTabeComponentImpl: Send message to TABE:
+pkg=com.mxnwel.RiCement,des=force-crash, adj = -1
+01-01 18:23:30.747  1053  1075 D AppFlingMode: [CheckAppFlingHint] 101 com.mxnwel.RiCement -1
+01-01 18:23:30.748  1701  2847 I PowerHalWrapper: amsBoostNotify pid:11723,activity:com.mxnwel.RiCement.MainActivity,
+package:com.mxnwel.RiCement, mProcessCreatePackcom.mxnwel.RiCement
+01-01 18:23:30.748  1701  2847 I ScnModule: [GameDetection] packname: com.mxnwel.RiCement, apkSize: 90429708.
+01-01 18:23:30.748  1701  2847 I mtkpower_client: [PowerHal_Wrap_notifyAppState]
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity pid=11723 activityId:24001977 state:0
+01-01 18:23:30.748  1701  2847 I mtkpower_client: [Legacy][PowerHal_Wrap_notifyAppState]
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity pid=11723 state:24001977
+01-01 18:23:30.748  1053  1133 I libPowerHal: [perfNotifyAppState] pack:com.mxnwel.RiCement,
+act:com.mxnwel.RiCement.MainActivity, state:0, pid:11723, uid:10342, fps:-1
+01-01 18:23:30.749  1701  1839 E TranCPUBooster: java.lang.IllegalArgumentException: Invalid argument: 25750
+01-01 18:23:30.750 10643 10716 I TABE.AppAprController: AppAprEntity{mPkgName='com.mxnwel.RiCement', mPkgVer='1.0.0',
+mPkgInstaller='pkg_inst', mExpType='JE', mExpSummary='com.facebook.react.common.JavascriptException Error Incompatible
+React versions The react and react native renderer packages must have the exact same version. Instead got[a4:13;]',
+mExpCount=1, mExpTime='2026-01-01 18:23:30', mIsContExp=false, mIsOpenExp=false, mIsBack=false, mTestType='official',
+mIsNativeProcess='false', mExpFilePath='', mSessionId='961d8e47af180a6ac217a4ebc16f4865', mTotalExpCount='1'}
+01-01 18:23:30.753  2372  2372 W TrBubbleTextView: RiCement setIconVisible: true
+01-01 18:23:30.754  1053  1075 D AppFlingMode: [CheckAppFlingHint] 22 com.mxnwel.RiCement -1
+01-01 18:23:30.754  1701  2503 W WindowManager: Changing focus from Window{74c310f u0
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity} to Window{9170efb u0
+com.transsion.XOSLauncher/com.android.launcher3.uioverrides.QuickstepLauncher} displayId=0
+Callers=com.android.server.wm.RootWindowContainer.updateFocusedWindowLocked:528
+com.android.server.wm.WindowManagerService.updateFocusedWindowLocked:6847
+com.android.server.wm.ActivityTaskManagerService.setLastResumedActivityUncheckLocked:5680
+com.android.server.wm.ActivityTaskSupervisor.updateTopResumedActivityIfNeeded:2511
+01-01 18:23:30.755  1701  2503 D TranDisplayJamMonitor: checkExceptionWindowResult = 1041
+01-01 18:23:30.756  1701  2503 D tranpm/BehaviorManager:  onAppLaunch nextPackName = com.transsion.XOSLauncher
+currPackName = com.mxnwel.RiCement
+01-01 18:23:30.756  1701  2503 I PowerHalWrapper: amsBoostNotify
+pid:2372,activity:com.android.launcher3.uioverrides.QuickstepLauncher, package:com.transsion.XOSLauncher,
+mProcessCreatePackcom.mxnwel.RiCement
+01-01 18:23:30.757  1053  1133 I TouchUtility: notifyAppState error = NULL
+01-01 18:23:30.757  1053  1075 I mtkpower@impl: [notifyAppState] pc:0, com.mxnwel.RiCement => com.transsion.XOSLauncher
+01-01 18:23:30.758  4558  5249 I SimpleEventAdapt: onActivityEvent get com.mxnwel.RiCement,
+com.mxnwel.RiCement.MainActivity,false
+01-01 18:23:30.758  1701  2329 I tranpm/Preloader: preload error: preloadList is null.
+01-01 18:23:30.759  1701  2342 D TranAppm/EsportsThermalModule:  AppSwitchListener from com.mxnwel.RiCement to
+com.transsion.XOSLauncher
+01-01 18:23:30.759  1701  2342 D TranAppm/EnvThermalPredictorModule:  AppSwitchListener from com.mxnwel.RiCement to
+com.transsion.XOSLauncher
+01-01 18:23:30.759  1701  2235 D PowerManagerService: onAppLaunch: currentPackage=com.mxnwel.RiCement,
+nextPackage=com.transsion.XOSLauncher.
+01-01 18:23:30.761  4558  9629 I Kolun_AI: SystemEventSubscribe: onPublishData {"type":"activity_event","time":17672630
+10758,"data":"{\"className\":\"com.mxnwel.RiCement.MainActivity\",\"isResumed\":false,\"packageName\":\"com.mxnwel.RiCe
+ment\"}","provider":"dc","dc_version":2030380000,"data_version":1,"user_id":0}
+01-01 18:23:30.763  1701  3376 W System.err: java.io.FileNotFoundException: /proc/report_rate_switch: open failed:
+ENOENT (No such file or directory)
+01-01 18:23:30.763  1701  3376 W System.err: Caused by: android.system.ErrnoException: open failed: ENOENT (No such
+file or directory)
+01-01 18:23:30.768  1701  1782 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = []
+errorCallbackToken=null taskFragmentOrganizer=null mInterrupt=false }
+01-01 18:23:30.768 10643 10716 D NotificationUtil: data = CriticalCrashModel{, appPackageName='com.mxnwel.RiCement',
+appVersionName='1.0.0', crashSummary='r=UNKNOWN sr=UNKNOWN im=FOREGROUND d=force-crash', timeStamp='1767263010747',
+firstTimeStamp='1767262664210', appInstaller='com.transsion.filemanagerx', appInstallTime='1767262656498',
+adjInfo='null', exceptionType='exit', extraInformation='null', reservedOne='null', reservedTwo='null',
+crashFrequency=7, crashAverageTime=0, causeByApp=1} adj = -1
+01-01 18:23:30.768  1701  1782 V WindowManager:         {WCT{RemoteToken{43b4e48 Task{c46b15f #378 type=standard
+A=10342:com.mxnwel.RiCement}}} m=CLOSE f=NONE leash=Surface(name=Task=378)/@0xd66dc3a sb=Rect(0, 0 - 1080, 2436)
+eb=Rect(0, 0 - 1080, 2436) mSimplifyStartAbsBounds=Rect(0, 0 - 0, 0) d=0 taskParent=-1},
+01-01 18:23:30.770  1116  1181 I SurfaceFlinger: onHandleDestroyed: name=316b5d1 Splash Screen
+com.mxnwel.RiCement#82982, layerId=82982, parentId=0
+01-01 18:23:30.771  4558  5249 I SimpleEventAdapt: onAppForegroundEvent get com.mxnwel.RiCement, false
+01-01 18:23:30.775  2372  2677 I TrFloatingIconSurface: on load, RiCement
+01-01 18:23:30.778  1116  1116 I BufferQueueDebug: [316b5d1 Splash Screen
+com.mxnwel.RiCement#82982](this:0xb4000079ea8b2478,id:-1,api:0,p:-1,c:1116) onDestructor()
+01-01 18:23:30.783  2372  2372 W TrBubbleTextView: RiCement setIconVisible: false
+01-01 18:23:30.783  2372  2372 I BaseAdsAppMgr: i onError TaErrorCode{errorCode=-1, errorMessage='not support'},
+mTaNativeInfoList.size:0
+01-01 18:23:30.783  2372  2372 I BaseAdsAppMgr: a onError TaErrorCode{errorCode=-1, errorMessage='not support'},
+mTaNativeInfoList.size:0
+01-01 18:23:30.789  1701  2052 E JobScheduler.Concurrency: Error executing JobStatus{b9bf065
+androidx.work.systemjobscheduler:u0a323/3150
+@androidx.work.systemjobscheduler@com.twitter.android/androidx.work.impl.background.systemjob.SystemJobService u=0
+s=10323 TIME=-13m8s145ms:none NET READY}
+01-01 18:23:30.798  4558  9629 I Kolun_AI: SystemEventSubscribe: onPublishData {"type":"app_foreground","time":17672630
+10774,"data":"{\"isForeground\":false,\"packageName\":\"com.mxnwel.RiCement\"}","provider":"dc","dc_version":2030380000
+,"data_version":1,"user_id":0}
+01-01 18:23:30.799  4558  9629 I Kolun_AI: SystemEventSubscribeheh:SimpleEventBus post event
+AppForegroundEvent{mPackageName='com.mxnwel.RiCement', mIsForeground=false} 1767263010774
+01-01 18:23:30.802  4558  4895 I Kolun_AI: SceneIdentify:onBusEvent AppForegroundEvent   com.mxnwel.RiCement, false,
+SceneIdentify
+01-01 18:23:30.802  4558  4895 I Kolun_AI: SceneIdentify:checkShortVideo com.mxnwel.RiCement false
+01-01 18:23:30.802  4558  4895 I Kolun_AI: SceneIdentify:checkGameOut  com.mxnwel.RiCement,
+01-01 18:23:30.802  4558  4895 I Kolun_AI: SceneIdentify:checkSocialOut  com.mxnwel.RiCement,
+01-01 18:23:30.802  4558  4895 I Kolun_AI: AppPredictManager:onBusEvent com.mxnwel.RiCement false
+01-01 18:23:30.805  1701  1786 W ActivityManager: pid 1701 system sent binder code 54 with flags 1 to frozen apps and
+got error -32
+01-01 18:23:30.805  1701  1786 W ActivityTaskManager: Failed for dead process.
+ClientTransactionItem=WindowStateInsetsControlChangeItem{mWindow=null} owner=ProcessRecord{fb89838
+11723:com.mxnwel.RiCement/u0a342}
+01-01 18:23:30.806 10643 10704 I TABE    : NOT trigger : User version NOT TOP or Internal App:com.mxnwel.RiCement
+01-01 18:23:30.806 10643 10704 I TABE.CrashHandler: Exception Info{Name='RiCement', Pkg='com.mxnwel.RiCement',
+EType='crash', ProcessType='data_app', EClassName='com.facebook.react.common.JavascriptException', EMessage='Error:
+Incompatible React versions: The "react" and "react-native-renderer" packages must have the exact same version.
+Instead got:
+01-01 18:23:30.810  1701  5105 I ActivityManager: Process com.mxnwel.RiCement (pid 11723) has died: prcp CRE
+01-01 18:23:30.810  1116  2987 D SurfaceFlinger: [SF client] REMOVE (0xb4000079ca69af80) for
+(11723:com.mxnwel.RiCement)
+01-01 18:23:30.810  1701  2283 I WindowManager: WIN DEATH: Window{74c310f u0
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}
+01-01 18:23:30.810  1116  2987 I SurfaceFlinger: onHandleDestroyed: name=Surface(name=316b5d1 Splash Screen
+com.mxnwel.RiCement)/@0x377923a - animation-leash of starting_reveal#82996, layerId=82996, parentId=0
+01-01 18:23:30.810  1701  5105 I Usf/appStateManager: updateAppCrash, uid=10342, pkg=com.mxnwel.RiCement, crash=false,
+reason=procDied
+01-01 18:23:30.810  1701  2283 W InputManager-JNI: Input channel object '74c310f
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity (client)' was disposed without first being removed with the input
+manager!
+01-01 18:23:30.810  1701  5105 D os.ActivityManagerServiceLice: make process inactive com.mxnwel.RiCement(11723)
+01-01 18:23:30.810  1701  2283 I WindowManager:   isAnimating=false  okToAnimate=true  win=Window{74c310f u0
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity}
+01-01 18:23:30.811  1116  1116 I BufferQueueDebug: [Surface(name=316b5d1 Splash Screen com.mxnwel.RiCement)/@0x377923a
+- animation-leash of starting_reveal#82996](this:0xb4000079ea9fc9b8,id:-1,api:0,p:-1,c:1116) onDestructor()
+01-01 18:23:30.814 11607 12098 I TranSucc.CrashlyticsWork: handle Crash: procName = com.mxnwel.RiCement, DB-hash =
+1148db79e6c576f03cbb479533b2f0ca, BIHash = 4b8d79bdc8dd068e854a9ab6049180f1, crash_type = crash, pkgName =
+com.mxnwel.RiCement, inc_count = 1, stack = 'com.facebook.react.common.JavascriptException: Error: Incompatible React
+versions: The "react" and "...'(Length=4715) , appVersionName = 1.0.0, db_size = 1
+01-01 18:23:30.817  1701  5105 I ScnModule: [GameDetection] packname: com.mxnwel.RiCement, apkSize: 90429708.
+01-01 18:23:30.817  1701  5105 I mtkpower_client: [PowerHal_Wrap_notifyAppState]
+com.mxnwel.RiCement/com.mxnwel.RiCement pid=11723 activityId:11723 state:3
+01-01 18:23:30.819  1053  1133 I libPowerHal: [perfNotifyAppState] pack:com.mxnwel.RiCement, act:com.mxnwel.RiCement,
+state:3, pid:11723, uid:10342, fps:-1
+01-01 18:23:30.819  1053  1133 I libPowerHal: [perfNotifyAppState] pack:com.mxnwel.RiCement, pid:11723, STATE_DEAD
+01-01 18:23:30.821  1701  5105 I mtkpower_client: [Legacy][PowerHal_Wrap_notifyAppState]
+com.mxnwel.RiCement/com.mxnwel.RiCement pid=11723 state:11723
+01-01 18:23:30.825  4558  5249 I SimpleEventAdapt: onAppStartEvent get com.mxnwel.RiCement,start false
+01-01 18:23:30.863  2381  2427 W RecentTasksController: baseActivity and topActivity is null:
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity
+01-01 18:23:30.869  5073  6278 D TurboSceneManager: handlerTurboStart  currentPackage = com.mxnwel.RiCement  pkgName =
+com.transsion.XOSLauncher  className = com.android.launcher3.uioverrides.QuickstepLauncher
+01-01 18:23:31.264  2372  2372 W TrBubbleTextView: RiCement setIconVisible: true
+01-01 18:23:31.267  1701  5081 W ActivityManager: pid 1701 system sent binder code 7 with flags 1 to frozen apps and
+got error -32
+01-01 18:23:31.267  1701  5081 W WindowManager: Exception thrown during dispatchAppVisibility Window{74c310f u0
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity EXITING}
+01-01 18:23:31.267  1701  5081 W WindowManager: android.os.DeadObjectException
+01-01 18:23:31.269  1116  1180 I SurfaceFlinger: onHandleDestroyed: name=8d4d5fe ActivityRecordInputSink
+com.mxnwel.RiCement/.MainActivity#82989, layerId=82989, parentId=0
+01-01 18:23:31.269  1276  1338 E uas-service: ioclt error: fd=3 cmd=1075336211 ux_data->pid=11723 ux_data->ux_tags=0
+01-01 18:23:31.270  1701  5081 D WindowManager: setParent old=ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378 f}},new=null,this window=Window{74c310f u0
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity
+EXITING},callers=com.android.server.wm.WindowContainer.removeChild:862
+com.android.server.wm.ActivityRecord.removeChild:5351 com.android.server.wm.ActivityRecord.removeChild:482
+com.android.server.wm.WindowContainer.removeImmediately:932 com.android.server.wm.WindowState.removeImmediately:2565
+com.android.server.wm.WindowContainer.removeImmediately:908
+01-01 18:23:31.270  1701  5081 D WindowManager: removeImmediately mActivityRecord: ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378 f}} type: 1
+01-01 18:23:31.270  1701  5081 D WindowManager: postWindowRemoveCleanupLocked: token:ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378 f}} win:Window{74c310f u0 com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity
+EXITING} token.isEmpty:true token.mPersistOnEmpty:true
+01-01 18:23:31.271  1701  5081 D WindowManager: setParent old=Task{c46b15f #378 type=standard
+A=10342:com.mxnwel.RiCement},new=null,this window=ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity t378
+f}},callers=com.android.server.wm.WindowContainer.removeChild:862 com.android.server.wm.TaskFragment.removeChild:3257
+com.android.server.wm.Task.removeChild:1590 com.android.server.wm.Task.removeChild:1573
+com.android.server.wm.WindowContainer.removeImmediately:932 com.android.server.wm.WindowToken.removeImmediately:359
+01-01 18:23:31.272  1701  5081 D WindowManager: setParent old=DefaultTaskDisplayArea@66795321,new=null,this
+window=Task{c46b15f #378 type=standard
+A=10342:com.mxnwel.RiCement},callers=com.android.server.wm.WindowContainer.removeChild:862
+com.android.server.wm.TaskDisplayArea.removeChildTask:418 com.android.server.wm.TaskDisplayArea.removeChild:409
+com.android.server.wm.WindowContainer.removeImmediately:932 com.android.server.wm.TaskFragment.removeImmediately:3337
+com.android.server.wm.Task.removeImmediately:2790
+01-01 18:23:31.281  1116  1116 I SurfaceFlinger: onHandleDestroyed: name=ActivityRecord{16e3db9 u0
+com.mxnwel.RiCement/.MainActivity t378}#82980, layerId=82980, parentId=0
+01-01 18:23:31.281  1116  1116 I SurfaceFlinger: onHandleDestroyed: name=74c310f
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity#82993, layerId=82993, parentId=0
+01-01 18:23:31.281  1116  1116 I SurfaceFlinger: onHandleDestroyed:
+name=com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity#82994, layerId=82994, parentId=0
+01-01 18:23:31.289  1116  1116 I BufferQueueDebug: [8d4d5fe ActivityRecordInputSink
+com.mxnwel.RiCement/.MainActivity#82989](this:0xb4000079ea895cd8,id:-1,api:0,p:-1,c:1116) onDestructor()
+01-01 18:23:31.289  1116  1116 I BufferQueueDebug: [74c310f
+com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity#82993](this:0xb4000079ea823e58,id:-1,api:0,p:-1,c:1116)
+onDestructor()
+01-01 18:23:31.289  1116  1116 I BufferQueueDebug: [ActivityRecord{16e3db9 u0 com.mxnwel.RiCement/.MainActivity
+t378}#82980](this:0xb4000079ea982288,id:-1,api:0,p:-1,c:1116) onDestructor()
+01-01 18:23:31.289  1116  1116 I BufferQueueDebug:
+[com.mxnwel.RiCement/com.mxnwel.RiCement.MainActivity#82994](this:0xb4000079eaa46a58,id:-1,api:0,p:-1,c:1116)
+onDestructor()
+01-01 18:23:31.306  1053  1133 I TouchUtility: notifyAppState error = NULL
+01-01 18:23:32.308  1053  1133 I TouchUtility: notifyAppState error = NULL
+01-01 18:23:32.827  1701  1793 D ActivityManager: TaskProcess diedRecentApp info=ApplicationExitInfo(timestamp=1/1/26,
+6:23ΓÇ»PM pid=11723 realUid=10342 packageUid=10342 definingUid=10342 user=0 process=com.mxnwel.RiCement reason=4 (APP
+CRASH(EXCEPTION)) subreason=0 (UNKNOWN) status=0 recentTaskInfo=0 adj=-10000 procState=NONE swapPss=0.00
+importance=100 pss=0.00 rss=0.00 description=crash state=empty trace=null

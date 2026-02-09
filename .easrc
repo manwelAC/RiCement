@@ -1,0 +1,6 @@
+{
+  "logApiLevel": "debug",
+  "env": {
+    "NODE_OPTIONS": "--no-deprecation"
+  }
+}

@@ -1,0 +1,609 @@
+import { Ionicons } from '@expo/vector-icons';
+import { GLView } from 'expo-gl';
+import { Renderer } from 'expo-three';
+import React, { useEffect, useRef, useState } from 'react';
+import { Dimensions, Modal, Pressable, StyleSheet, View } from 'react-native';
+import { GestureHandlerRootView, PanGestureHandler, PinchGestureHandler, State } from 'react-native-gesture-handler';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { ThemedText } from './ThemedText';
+
+interface Model3DViewerProps {
+  visible: boolean;
+  onClose: () => void;
+}
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+export default function Model3DViewer({ visible, onClose }: Model3DViewerProps) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  
+  // 3D Scene refs
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const rendererRef = useRef<Renderer | null>(null);
+  const modelRef = useRef<THREE.Object3D | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  
+  // Touch interaction states
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [scale, setScale] = useState(1);
+  const lastPan = useRef({ x: 0, y: 0 });
+  const lastScale = useRef(1);
+
+  const startAnimationLoop = (renderer: Renderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, gl: any) => {
+    const animate = () => {
+      animationFrameRef.current = requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+      gl.endFrameEXP();
+    };
+    animate();
+  };
+
+  const setupScene = async (gl: any) => {
+    try {
+      setIsLoading(true);
+      setHasError(false);
+
+      // Clean up any existing scene first
+      cleanup();
+
+      // Create renderer with proper viewport setup
+      const renderer = new Renderer({ gl });
+      renderer.setSize(screenWidth, screenHeight);
+      renderer.setViewport(0, 0, screenWidth, screenHeight);
+      renderer.setClearColor('#F2F2F7');
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      rendererRef.current = renderer;
+      
+      console.log('Renderer viewport set to:', screenWidth, 'x', screenHeight);
+      console.log('GL context size:', gl.drawingBufferWidth, 'x', gl.drawingBufferHeight);
+
+      // Create scene
+      const scene = new THREE.Scene();
+      sceneRef.current = scene;
+
+      // Create camera with proper aspect ratio and positioning
+      const camera = new THREE.PerspectiveCamera(
+        60,  // Field of view
+        screenWidth / screenHeight,
+        0.1,
+        1000
+      );
+      
+      // Position camera to look at center from above and back
+      camera.position.set(0, 5, 10);
+      camera.lookAt(0, 0, 0);
+      camera.updateProjectionMatrix();
+      cameraRef.current = camera;
+      
+      console.log('Camera setup - Position:', camera.position, 'Aspect:', camera.aspect);
+      console.log('Screen dimensions:', screenWidth, 'x', screenHeight);
+
+      // Calculate screen center offset for Expo GL coordinate system
+      // In Expo GL, (0,0,0) appears to be at bottom-left, not screen center
+      // We need to translate to the actual center based on the camera's view
+      const aspectRatio = screenWidth / screenHeight;
+      const cameraHeight = 2 * Math.tan((60 * Math.PI / 180) / 2) * 10; // FOV=60, distance=10
+      const cameraWidth = cameraHeight * aspectRatio;
+
+      const screenCenterX = 10; // X should be fine at 4
+      const screenCenterY = cameraHeight / 4; // Move up by quarter of camera height
+      const screenCenterZ = 0; // Keep Z at 0
+      
+      console.log('Camera view dimensions:', cameraWidth, 'x', cameraHeight);
+      console.log('Calculated screen center offset:', screenCenterX, screenCenterY, screenCenterZ);
+
+      // Update camera to look at the model's new position (prevents cropping)
+      camera.lookAt(screenCenterX, screenCenterY, screenCenterZ);
+      camera.updateProjectionMatrix();
+
+      // Add lights
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(5, 10, 5);
+      directionalLight.castShadow = true;
+      directionalLight.shadow.mapSize.width = 2048;
+      directionalLight.shadow.mapSize.height = 2048;
+      scene.add(directionalLight);
+
+      const pointLight = new THREE.PointLight(0xffffff, 0.5);
+      pointLight.position.set(-5, 5, -5);
+      scene.add(pointLight);
+
+      // Add reference point at calculated screen center for debugging
+      const referenceGeometry = new THREE.SphereGeometry(0.5);
+      const referenceMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+      const referenceSphere = new THREE.Mesh(referenceGeometry, referenceMaterial);
+      referenceSphere.position.set(screenCenterX, screenCenterY, screenCenterZ);
+      scene.add(referenceSphere);
+      console.log('Added reference sphere at calculated center:', screenCenterX, screenCenterY, screenCenterZ);
+
+      // Load GLB model from public URL with better path resolution
+      console.log('Loading 3D model from public URL...');
+      
+      const loader = new GLTFLoader();
+      
+      // Set up a loading manager to handle resources and provide proper base path
+      const loadingManager = new THREE.LoadingManager();
+      loadingManager.setURLModifier((url) => {
+        // If it's a relative texture path, resolve it relative to the public directory
+        if (url.includes('.jpg') || url.includes('.png') || url.includes('.jpeg')) {
+          // Try to find the texture in the public directory
+          const filename = url.split('/').pop();
+          return `/${filename}`;
+        }
+        return url;
+      });
+      
+      loadingManager.onError = (url) => {
+        console.log('Could not load resource (this is normal for embedded textures):', url);
+      };
+      
+      try {
+        // Load the GLB file from the public directory
+        const modelUrl = '/3DMODEL.glb';
+        console.log('Loading model from URL:', modelUrl);
+        
+        loader.load(
+          modelUrl,
+          (gltf: any) => {
+            const model = gltf.scene;
+            
+            // Center and scale the model with explicit positioning
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+            
+            console.log('Original model center:', center);
+            console.log('Original model size:', size);
+            
+            // Calculate proper scaling
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const modelScale = 4 / maxDim;
+            
+            // Create a group to handle positioning more reliably
+            const modelGroup = new THREE.Group();
+            
+            // Reset model transformation
+            model.position.set(0, 0, 0);
+            model.rotation.set(0, 0, 0);
+            model.scale.setScalar(modelScale);
+            
+            // Center the model within the group
+            model.position.set(
+              -center.x * modelScale,
+              -center.y * modelScale,
+              -center.z * modelScale
+            );
+            
+            // Add model to group
+            modelGroup.add(model);
+            
+            // Position the group at the calculated screen center
+            modelGroup.position.set(screenCenterX, screenCenterY, screenCenterZ);
+            
+            console.log('Model in group - Position:', model.position);
+            console.log('Group position (screen center):', modelGroup.position);
+            console.log('Model scale:', model.scale);
+            
+            // Update matrices
+            model.updateMatrix();
+            model.updateMatrixWorld(true);
+            modelGroup.updateMatrix();
+            modelGroup.updateMatrixWorld(true);
+            
+            // Add to scene
+            scene.add(modelGroup);
+            modelRef.current = modelGroup;  // Store the group as the model ref
+            
+            // Enable shadows and enhance materials (keep existing textures)
+            model.traverse((child: any) => {
+              if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                
+                // Handle materials more carefully - don't modify textures
+                if (child.material) {
+                  if (Array.isArray(child.material)) {
+                    child.material.forEach(mat => {
+                      if (mat instanceof THREE.MeshStandardMaterial) {
+                        // Only adjust material properties, leave textures alone
+                        mat.metalness = Math.min(mat.metalness || 0, 0.3);
+                        mat.roughness = Math.max(mat.roughness || 0.8, 0.6);
+                      }
+                    });
+                  } else if (child.material instanceof THREE.MeshStandardMaterial) {
+                    // Only adjust material properties, leave textures alone
+                    child.material.metalness = Math.min(child.material.metalness || 0, 0.3);
+                    child.material.roughness = Math.max(child.material.roughness || 0.8, 0.6);
+                  }
+                }
+              }
+            });
+            
+            setIsLoading(false);
+            
+            // Start animation loop
+            startAnimationLoop(renderer, scene, camera, gl);
+          },
+          (progress: any) => {
+            console.log('Loading progress:', (progress.loaded / progress.total) * 100 + '%');
+          },
+          (error: any) => {
+            console.error('Error loading GLB model:', error);
+            // Fallback to test geometry if GLB loading fails
+            console.log('Falling back to test geometry...');
+            
+            const geometry = new THREE.BoxGeometry(3, 3, 3); // Bigger for visibility
+            const material = new THREE.MeshStandardMaterial({ 
+              color: 0x00ff00,
+              metalness: 0.1,
+              roughness: 0.8 
+            });
+            const testModel = new THREE.Mesh(geometry, material);
+            testModel.castShadow = true;
+            testModel.receiveShadow = true;
+            
+            // Position directly at calculated screen center
+            testModel.position.set(screenCenterX, screenCenterY, screenCenterZ);
+            
+            scene.add(testModel);
+            modelRef.current = testModel;
+            
+            setIsLoading(false);
+            
+            // Start animation loop
+            startAnimationLoop(renderer, scene, camera, gl);
+          }
+        );
+      } catch (assetError) {
+        console.error('Error loading asset:', assetError);
+        setHasError(true);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error('Error setting up 3D scene:', error);
+      setHasError(true);
+      setIsLoading(false);
+    }
+  };
+
+  const cleanup = () => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+    
+    if (sceneRef.current) {
+      // Dispose of geometries and materials more carefully
+      sceneRef.current.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          if (object.geometry) {
+            object.geometry.dispose();
+          }
+          if (object.material) {
+            if (Array.isArray(object.material)) {
+              object.material.forEach(material => {
+                if (material && typeof material.dispose === 'function') {
+                  material.dispose();
+                }
+              });
+            } else if (object.material && typeof object.material.dispose === 'function') {
+              object.material.dispose();
+            }
+          }
+        }
+      });
+      
+      // Clear the scene
+      while(sceneRef.current.children.length > 0) {
+        sceneRef.current.remove(sceneRef.current.children[0]);
+      }
+    }
+    
+    if (rendererRef.current) {
+      rendererRef.current.dispose();
+      rendererRef.current = null;
+    }
+    
+    // Clear refs
+    modelRef.current = null;
+    sceneRef.current = null;
+    cameraRef.current = null;
+  };
+
+  useEffect(() => {
+    // Suppress texture loading errors when component mounts
+    const originalWarn = console.warn;
+    const originalError = console.error;
+    
+    console.warn = function(message, ...args) {
+      if (typeof message === 'string' && 
+          (message.includes('GLTFLoader') || 
+           message.includes('texture') || 
+           message.includes('Could not load') ||
+           message.includes("Couldn't load"))) {
+        return;
+      }
+      originalWarn.apply(console, [message, ...args]);
+    };
+    
+    console.error = function(message, ...args) {
+      if (typeof message === 'string' && 
+          (message.includes('GLTFLoader') || 
+           message.includes('texture') || 
+           message.includes('Could not load') ||
+           message.includes("Couldn't load"))) {
+        return;
+      }
+      originalError.apply(console, [message, ...args]);
+    };
+
+    // Cleanup when component unmounts or modal closes
+    if (!visible) {
+      cleanup();
+    }
+    
+    return () => {
+      cleanup();
+      // Restore console functions
+      console.warn = originalWarn;
+      console.error = originalError;
+    };
+  }, [visible]);
+
+  // Update model transformations when rotation or scale changes
+  useEffect(() => {
+    if (modelRef.current && modelRef.current.rotation && modelRef.current.scale) {
+      modelRef.current.rotation.y = rotation.y;
+      modelRef.current.rotation.x = rotation.x;
+      modelRef.current.scale.setScalar(scale);
+    }
+  }, [rotation, scale]);
+
+  const handlePanGesture = (event: any) => {
+    if (event.nativeEvent.state === State.ACTIVE) {
+      const deltaX = event.nativeEvent.translationX - lastPan.current.x;
+      const deltaY = event.nativeEvent.translationY - lastPan.current.y;
+      
+      setRotation(prev => ({
+        x: Math.max(-Math.PI, Math.min(Math.PI, prev.x - deltaY * 0.01)),
+        y: prev.y + deltaX * 0.01
+      }));
+      
+      lastPan.current = {
+        x: event.nativeEvent.translationX,
+        y: event.nativeEvent.translationY
+      };
+    } else if (event.nativeEvent.state === State.BEGAN) {
+      lastPan.current = { x: 0, y: 0 };
+    } else if (event.nativeEvent.state === State.END) {
+      lastPan.current = { x: 0, y: 0 };
+    }
+  };
+
+  const handlePinchGesture = (event: any) => {
+    if (event.nativeEvent.state === State.ACTIVE) {
+      const newScale = lastScale.current * event.nativeEvent.scale;
+      setScale(Math.max(0.1, Math.min(5, newScale))); // Limit scale between 0.1x and 5x
+    } else if (event.nativeEvent.state === State.BEGAN) {
+      lastScale.current = scale;
+    } else if (event.nativeEvent.state === State.END) {
+      lastScale.current = scale;
+    }
+  };
+
+  const resetView = () => {
+    setRotation({ x: 0, y: 0 });
+    setScale(1);
+    lastPan.current = { x: 0, y: 0 };
+    lastScale.current = 1;
+  };
+
+  const handleRetry = () => {
+    setHasError(false);
+    setIsLoading(true);
+    // The GLView will re-render and call setupScene again
+  };
+
+  if (!visible) return null;
+
+  return (
+    <Modal
+      animationType="fade"
+      transparent={false}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <Pressable onPress={onClose} style={styles.closeButton}>
+              <Ionicons name="arrow-back" size={24} color="#1C1C1E" />
+            </Pressable>
+            <ThemedText style={styles.headerTitle}>3D Model Viewer</ThemedText>
+          </View>
+          <Pressable onPress={resetView} style={styles.resetButton}>
+            <Ionicons name="refresh" size={20} color="#007AFF" />
+          </Pressable>
+        </View>
+
+        {/* 3D Viewer */}
+        <View style={styles.viewerContainer}>
+          {hasError ? (
+            <View style={styles.errorContainer}>
+              <Ionicons name="alert-circle" size={48} color="#FF3B30" />
+              <ThemedText style={styles.errorTitle}>Failed to load 3D model</ThemedText>
+              <ThemedText style={styles.errorText}>
+                There was an error loading the 3D model. Please try again.
+              </ThemedText>
+              <Pressable style={styles.retryButton} onPress={handleRetry}>
+                <ThemedText style={styles.retryButtonText}>Retry</ThemedText>
+              </Pressable>
+            </View>
+          ) : (
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <PinchGestureHandler onGestureEvent={handlePinchGesture}>
+                <PanGestureHandler onGestureEvent={handlePanGesture}>
+                  <GLView
+                    style={styles.glView}
+                    onContextCreate={setupScene}
+                  />
+                </PanGestureHandler>
+              </PinchGestureHandler>
+            </GestureHandlerRootView>
+          )}
+          
+          {isLoading && (
+            <View style={styles.loadingOverlay}>
+              <View style={styles.loadingContainer}>
+                <ThemedText style={styles.loadingText}>Loading 3D Model...</ThemedText>
+              </View>
+            </View>
+          )}
+        </View>
+
+        {/* Controls Info */}
+        <View style={styles.controlsInfo}>
+          <View style={styles.controlItem}>
+            <Ionicons name="hand-left" size={16} color="#8E8E93" />
+            <ThemedText style={styles.controlText}>Drag to rotate</ThemedText>
+          </View>
+          <View style={styles.controlItem}>
+            <Ionicons name="resize" size={16} color="#8E8E93" />
+            <ThemedText style={styles.controlText}>Pinch to zoom</ThemedText>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F2F2F7',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#E5E5EA',
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  closeButton: {
+    padding: 8,
+    marginRight: 12,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1C1C1E',
+  },
+  resetButton: {
+    padding: 8,
+    backgroundColor: '#F2F2F7',
+    borderRadius: 8,
+  },
+  viewerContainer: {
+    flex: 1,
+    position: 'relative',
+  },
+  glView: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(242, 242, 247, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    backgroundColor: '#FFFFFF',
+    padding: 24,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  loadingText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1C1C1E',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 40,
+  },
+  errorTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1C1C1E',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#8E8E93',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  retryButton: {
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+  },
+  retryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  controlsInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 0.5,
+    borderTopColor: '#E5E5EA',
+  },
+  controlItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  controlText: {
+    fontSize: 14,
+    color: '#8E8E93',
+    marginLeft: 8,
+    fontWeight: '500',
+  },
+});
