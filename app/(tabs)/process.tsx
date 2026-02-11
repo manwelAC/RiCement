@@ -189,9 +189,9 @@ export default function ProcessScreen() {
   };
 
   // Function to calculate estimated time based on blocks
-  // Per block: 10s Pouring + 60s Mixing + 10s Pouring2 = 80 seconds per block
+  // Per block: 20s Pouring + 60s Mixing + 10s Pouring2 = 90 seconds per block
   const calculateEstimatedTime = (numberOfBlocks: number): string => {
-    const secondsPerBlock = 80; // 10 + 60 + 10
+    const secondsPerBlock = 90; // 20 + 60 + 10
     const totalSeconds = numberOfBlocks * secondsPerBlock;
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -230,7 +230,7 @@ export default function ProcessScreen() {
             return project;
           }
           
-          // Handle Pouring (first pouring - 10 seconds)
+          // Handle Pouring (first pouring - 20 seconds)
           if (project.status === 'Pouring' && project.pouringTime !== undefined && project.pouringTime > 0) {
             hasChanged = true;
             const newPouringTime = project.pouringTime - 1;
@@ -747,7 +747,10 @@ export default function ProcessScreen() {
         if (updatedProject.status === 'Mixing' && updatedProject.remainingTime === undefined) {
           updatedProject = { ...updatedProject, remainingTime: 60 };
         }
-        if ((updatedProject.status === 'Pouring' || updatedProject.status === 'Pouring2') && updatedProject.pouringTime === undefined) {
+        if (updatedProject.status === 'Pouring' && updatedProject.pouringTime === undefined) {
+          updatedProject = { ...updatedProject, pouringTime: 20 };
+        }
+        if (updatedProject.status === 'Pouring2' && updatedProject.pouringTime === undefined) {
           updatedProject = { ...updatedProject, pouringTime: 10 };
         }
         if (updatedProject.completedBlocks === undefined) {
@@ -1715,7 +1718,7 @@ export default function ProcessScreen() {
             <View style={styles.emptyContainer}>
               <Ionicons name="folder-open-outline" size={48} color="#C7C7CC" style={styles.emptyIcon} />
               <ThemedText style={styles.emptyText}>
-                {searchQuery ? 'Walang nakitang proyekto na tumutugma sa iyong search.' : 'Walang proyekto pa. Dagdagan mo ang iyong unang proyekto!'}
+                {searchQuery ? 'Walang nakitang proyekto na tumutugma sa iyong search.' : 'Walang pang proyekto. Dagdagan mo ang iyong unang proyekto!'}
               </ThemedText>
             </View>
           ) : (
@@ -2851,7 +2854,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   chartTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '600',
     color: '#1C1C1E',
   },
@@ -2862,7 +2865,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   materialLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#1C1C1E',
     width: 70,
     fontWeight: '500',
@@ -3106,7 +3109,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: '#8E8E93',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '400',
     textAlign: 'center',
     lineHeight: 22,
@@ -3285,7 +3288,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   materialLabelLarge: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
     color: '#1C1C1E',
   },

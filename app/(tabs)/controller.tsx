@@ -128,7 +128,7 @@ export default function ControllerScreen() {
       contentContainerStyle={{ flexGrow: 1 }}
     >
       <ThemedView style={styles.header}>
-        <ThemedText style={styles.headerTitle}>Machine Controller</ThemedText>
+        <ThemedText style={styles.headerTitle}>Kontroler ng Makina</ThemedText>
         <ThemedText style={styles.headerSubtitle}>Real-time Command Control</ThemedText>
       </ThemedView>
 
@@ -137,7 +137,7 @@ export default function ControllerScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Ionicons name="water" size={24} color="#007AFF" />
-            <ThemedText style={styles.sectionTitle}>Dispense Commands</ThemedText>
+            <ThemedText style={styles.sectionTitle}>Buhos ng Kasangkapan</ThemedText>
           </View>
 
           <View style={styles.commandGrid}>
@@ -180,7 +180,7 @@ export default function ControllerScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Ionicons name="settings" size={24} color="#007AFF" />
-            <ThemedText style={styles.sectionTitle}>Mix Commands</ThemedText>
+            <ThemedText style={styles.sectionTitle}>Mga Command sa Pagmamix</ThemedText>
           </View>
 
           <View style={styles.mixControlsContainer}>
