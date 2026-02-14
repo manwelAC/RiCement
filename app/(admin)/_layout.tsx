@@ -9,7 +9,8 @@ export default function AdminLayout() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack screenOptions={{ headerShown: false }} initialRouteName="landing">
+      <Stack.Screen name="landing" />
       <Stack.Screen name="login" />
       <Stack.Screen name="dashboard" />
       <Stack.Screen name="projects" />

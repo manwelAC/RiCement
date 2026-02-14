@@ -15,10 +15,16 @@ interface Message {
   timestamp: Date;
 }
 
+interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+}
+
 // Helper function to render text with bold markdown
 const renderTextWithBold = (text: string, isUser: boolean) => {
   const parts = text.split(/(\*\*.*?\*\*)/g);
-  
+
   return (
     <Text style={isUser ? styles.userMessageText : styles.aiMessageTextStyle}>
       {parts.map((part, index) => {
@@ -37,6 +43,25 @@ const renderTextWithBold = (text: string, isUser: boolean) => {
   );
 };
 
+// FAQ Data
+const FAQs: FAQ[] = [
+  {
+    id: 'faq-1',
+    question: 'What is this system and what does it do?',
+    answer: 'RiCement automates the mixing and dispensing of cement with Rice Husk Ash'
+  },
+  {
+    id: 'faq-2',
+    question: 'Why use Rice Husk ash in cement mixture?',
+    answer: 'According to an interview with Engr. Harffi Joy Hazel A. Caesar, RCE, a study investigated the effect of rice husk ash (RHA) as a partial replacement of cement in hollow sandcrete blocks. He explained that the study used varying proportions of RHA—0%, 5%, 10%, 20%, and 30% by weight of cement. Engr. Subang stated that the compressive strength of the blocks decreased with increasing ash content; however, those with 10% RHA replacement still achieved strength values that satisfied the minimum building standards (approximately 2.5 N/mm²). He further noted that the study recommended up to 10% RHA replacement for non-load bearing blocks, emphasizing that about 5.3% cost savings per block could be achieved by using RHA as partial cement replacement.'
+  },
+  {
+    id: 'faq-3',
+    question: 'How does the automated mixing process work?',
+    answer: 'Create a project at the "Proyekto" tab and start creating by clicking the \'Dagdag\' button and input the fields that are required for the Project to start'
+  }
+];
+
 export default function GlobalAIChat() {
   const pathname = usePathname();
   const [isAiChatVisible, setIsAiChatVisible] = useState(false);
@@ -51,6 +76,31 @@ export default function GlobalAIChat() {
   if (hiddenRoutes.includes(pathname)) {
     return null;
   }
+
+  // Handle FAQ button press
+  const handleFAQPress = (faq: FAQ) => {
+    // Add FAQ question as user message
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      text: faq.question,
+      isUser: true,
+      timestamp: new Date()
+    };
+
+    setAiMessages(prev => [...prev, userMessage]);
+
+    // Add FAQ answer as AI message
+    const aiMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      text: faq.answer,
+      isUser: false,
+      timestamp: new Date()
+    };
+
+    setTimeout(() => {
+      setAiMessages(prev => [...prev, aiMessage]);
+    }, 300);
+  };
 
   // AI Chat Functions
   const sendMessageToAI = async (message: string) => {
@@ -115,30 +165,138 @@ export default function GlobalAIChat() {
   // Execute action commands (add project, delete project, etc.)
   const executeActionIfCommand = async (message: string): Promise<string | null> => {
     const lowerMessage = message.toLowerCase();
-    
+
+    // Detect production statistics queries
+    if ((lowerMessage.includes('how many') && lowerMessage.includes('produced')) ||
+        lowerMessage.includes('production') && (lowerMessage.includes('month') || lowerMessage.includes('week') || lowerMessage.includes('day')) ||
+        lowerMessage.includes('blocks produced') ||
+        lowerMessage.includes('total production')) {
+      return await handleProductionStatsQuery(message);
+    }
+
     // Detect "add project" command
     if (lowerMessage.includes('add project') || lowerMessage.includes('create project') || lowerMessage.includes('new project')) {
       return await handleAddProjectCommand(message);
     }
-    
+
     // Detect "add manual project" or "start manual project" command
     if (lowerMessage.includes('manual project') || lowerMessage.includes('start process') || lowerMessage.includes('start manual')) {
       return await handleAddManualProjectCommand(message);
     }
-    
+
     // Detect "delete project" command
     if (lowerMessage.includes('delete project') || lowerMessage.includes('remove project')) {
       return await handleDeleteProjectCommand(message);
     }
-    
+
     // Detect block prediction queries
-    if ((lowerMessage.includes('how many blocks') || lowerMessage.includes('predict blocks') || lowerMessage.includes('calculate blocks') || lowerMessage.includes('blocks needed')) 
+    if ((lowerMessage.includes('how many blocks') || lowerMessage.includes('predict blocks') || lowerMessage.includes('calculate blocks') || lowerMessage.includes('blocks needed'))
         && (lowerMessage.includes('sqm') || lowerMessage.includes('square meter') || lowerMessage.includes('m²') || lowerMessage.includes('m2'))) {
       return await handleBlockPredictionCommand(message);
     }
-    
+
     // No command detected
     return null;
+  };
+
+  // Handle production statistics queries
+  const handleProductionStatsQuery = async (message: string): Promise<string> => {
+    try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        return "❌ You must be signed in to view production statistics. Please log in first.";
+      }
+
+      const stats = await getProductionStats(message);
+      return stats;
+    } catch (error: any) {
+      console.error('Error fetching production stats:', error);
+      return `❌ Failed to fetch production statistics: ${error.message || 'Unknown error'}`;
+    }
+  };
+
+  // Get production statistics based on query
+  const getProductionStats = async (message: string): Promise<string> => {
+    try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        return "❌ Not logged in";
+      }
+
+      // Query Firebase projects
+      const projectsRef = collection(db, 'projects');
+      const allProjectsQuery = query(
+        projectsRef,
+        where('userId', '==', currentUser.uid),
+        orderBy('createdAt', 'desc')
+      );
+
+      const querySnapshot = await getDocs(allProjectsQuery);
+      const projects: any[] = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        projects.push({
+          id: doc.id,
+          name: data.name,
+          blocks: data.blocks || 0,
+          status: data.status,
+          date: data.date,
+          createdAt: data.createdAt?.toDate?.() || new Date(data.createdAt),
+        });
+      });
+
+      // Determine time period from message
+      const lowerMessage = message.toLowerCase();
+      const now = new Date();
+      let startDate: Date;
+      let timeLabel: string;
+
+      if (lowerMessage.includes('today') || lowerMessage.includes('this day')) {
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        timeLabel = 'Today';
+      } else if (lowerMessage.includes('week')) {
+        startDate = new Date(now);
+        startDate.setDate(startDate.getDate() - 7);
+        timeLabel = 'This Week';
+      } else if (lowerMessage.includes('month')) {
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        timeLabel = 'This Month';
+      } else if (lowerMessage.includes('year')) {
+        startDate = new Date(now.getFullYear(), 0, 1);
+        timeLabel = 'This Year';
+      } else {
+        // Default to month
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        timeLabel = 'This Month';
+      }
+
+      // Filter projects by date and status
+      const filteredProjects = projects.filter(p => {
+        const projectDate = new Date(p.createdAt);
+        return projectDate >= startDate && p.status === 'Completed';
+      });
+
+      const totalBlocks = filteredProjects.reduce((sum, p) => sum + (p.blocks || 0), 0);
+      const projectCount = filteredProjects.length;
+
+      if (projectCount === 0) {
+        return `📊 Production Statistics - ${timeLabel}\n\nNo completed projects found for this period.\n\nStart creating projects to begin tracking your RHA block production! 🚀`;
+      }
+
+      // Calculate average blocks per project
+      const avgBlocksPerProject = Math.round(totalBlocks / projectCount);
+
+      // Get top project
+      const topProject = filteredProjects.reduce((max, p) =>
+        (p.blocks > (max?.blocks || 0)) ? p : max
+      );
+
+      return `📊 Production Statistics - ${timeLabel}\n\n✅ **Completed Projects:** ${projectCount}\n📦 **Total Blocks Produced:** ${totalBlocks.toLocaleString()}\n📈 **Average per Project:** ${avgBlocksPerProject} blocks\n🏆 **Largest Project:** ${topProject.name} (${topProject.blocks} blocks)\n\nGreat progress on your RHA block production! 🌾`;
+    } catch (error: any) {
+      console.error('Error calculating production stats:', error);
+      return `❌ Failed to calculate statistics: ${error.message || 'Unknown error'}`;
+    }
   };
 
   // Handle "add project" command
@@ -902,8 +1060,26 @@ Recent Projects: ${recentProjects || 'None'}`;
                 <Ionicons name="close" size={20} color="#8E8E93" />
               </Pressable>
             </View>
-            
-            <ScrollView 
+
+            {/* FAQ Buttons */}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.faqButtonsContainer}
+              contentContainerStyle={styles.faqButtonsContent}
+            >
+              {FAQs.map((faq) => (
+                <Pressable
+                  key={faq.id}
+                  style={styles.faqButton}
+                  onPress={() => handleFAQPress(faq)}
+                >
+                  <ThemedText style={styles.faqButtonText}>{faq.question}</ThemedText>
+                </Pressable>
+              ))}
+            </ScrollView>
+
+            <ScrollView
               style={styles.aiChatMessages}
               showsVerticalScrollIndicator={false}
               ref={(ref) => ref?.scrollToEnd({ animated: true })}
@@ -1174,5 +1350,32 @@ const styles = StyleSheet.create({
     backgroundColor: '#8E8E93',
     marginHorizontal: 2,
     opacity: 0.4,
+  },
+  // FAQ Buttons
+  faqButtonsContainer: {
+    maxHeight: 100,
+    backgroundColor: '#F8F9FA',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5EA',
+  },
+  faqButtonsContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    gap: 8,
+  },
+  faqButton: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#E5E5EA',
+    justifyContent: 'center',
+  },
+  faqButtonText: {
+    fontSize: 13,
+    color: '#007AFF',
+    fontWeight: '500',
+    lineHeight: 16,
   },
 });

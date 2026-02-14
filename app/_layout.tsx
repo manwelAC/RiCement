@@ -22,20 +22,24 @@ function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        {isWeb ? (
-          <Stack.Screen name="landing" options={{ animationEnabled: false }} />
-        ) : (
+      {isWeb ? (
+        // Web: Use admin group starting with landing
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(admin)" options={{ animationEnabled: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      ) : (
+        // Mobile: Use tabs group starting with index
+        <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" options={{ animationEnabled: false }} />
-        )}
-        <Stack.Screen name="(admin)" />
-        <Stack.Screen name="+not-found" />
-        <Stack.Screen name="intro" />
-        <Stack.Screen name="login" />
-        <Stack.Screen name="signup" />
-        <Stack.Screen name="terms" />
-        <Stack.Screen name="forgot-password" />
-      </Stack>
+          <Stack.Screen name="intro" />
+          <Stack.Screen name="login" />
+          <Stack.Screen name="signup" />
+          <Stack.Screen name="terms" />
+          <Stack.Screen name="forgot-password" />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      )}
       <StatusBar style="auto" />
     </ThemeProvider>
   );

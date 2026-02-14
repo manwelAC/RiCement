@@ -1,4 +1,4 @@
-// Admin Index - Redirects to login
+// Admin Index - Redirects to landing
 import { Redirect } from 'expo-router';
 import { Platform } from 'react-native';
 
@@ -7,5 +7,5 @@ export default function AdminIndex() {
     return <Redirect href="/" />;
   }
   
-  return <Redirect href="/(admin)/login" />;
+  return <Redirect href="/(admin)/landing" />;
 }

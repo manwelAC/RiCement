@@ -249,26 +249,67 @@ class FirebaseService {
 
   async getProjects(userId: string): Promise<Project[]> {
     try {
-      const q = query(
+      // Query 1: Projects created by the user
+      const createdQuery = query(
         collection(db, 'projects'),
         where('userId', '==', userId),
         orderBy('createdAt', 'desc')
       );
-      
-      const querySnapshot = await getDocs(q);
+
+      const createdSnapshot = await getDocs(createdQuery);
       const projects: Project[] = [];
-      
-      querySnapshot.forEach((doc) => {
+      const projectIds = new Set<string>();
+
+      // Add created projects
+      createdSnapshot.forEach((doc) => {
         const data = doc.data();
-        projects.push({
+        const project = {
           id: doc.id,
           ...data,
           createdAt: data.createdAt?.toDate() || new Date(),
           updatedAt: data.updatedAt?.toDate() || new Date()
-        } as Project);
+        } as Project;
+        projects.push(project);
+        projectIds.add(doc.id);
       });
-      
-      return projects;
+
+      // Query 2: Projects where user is a collaborator
+      // Get all projects and filter client-side (Firestore doesn't support array-contains with compound queries)
+      const allProjectsQuery = query(
+        collection(db, 'projects'),
+        orderBy('createdAt', 'desc')
+      );
+
+      const allSnapshot = await getDocs(allProjectsQuery);
+      const collaboratorProjects: Project[] = [];
+
+      allSnapshot.forEach((doc) => {
+        // Skip if already added (user is creator)
+        if (projectIds.has(doc.id)) return;
+
+        const data = doc.data();
+        const collaborators = data.collaborators || [];
+
+        // Check if current user is a collaborator
+        const isCollaborator = collaborators.some((collab: Collaborator) => collab.userId === userId);
+
+        if (isCollaborator) {
+          const project = {
+            id: doc.id,
+            ...data,
+            createdAt: data.createdAt?.toDate() || new Date(),
+            updatedAt: data.updatedAt?.toDate() || new Date()
+          } as Project;
+          collaboratorProjects.push(project);
+        }
+      });
+
+      // Combine and sort by createdAt (newest first)
+      const allProjects = [...projects, ...collaboratorProjects].sort(
+        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+      );
+
+      return allProjects;
     } catch (error) {
       console.error('Error getting projects:', error);
       // Fallback to AsyncStorage

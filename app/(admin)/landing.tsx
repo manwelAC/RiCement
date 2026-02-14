@@ -1,12 +1,12 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View
 } from 'react-native';
 
 export default function LandingPage() {
@@ -35,7 +35,7 @@ export default function LandingPage() {
               <Text style={styles.navLinkText}>Patungkol</Text>
             </Pressable>
             <Pressable 
-              onPress={() => router.push('/login')}
+              onPress={() => router.push('/(admin)/login')}
               style={styles.loginButton}
             >
               <Text style={styles.loginButtonText}>Sign In</Text>

@@ -10,40 +10,40 @@ service cloud.firestore {
          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'superadmin');
     }
     
-    // Helper function to check if user is superadmin
-    function isSuperAdmin() {
-      return request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'superadmin';
+    // Helper function to check if user is a collaborator on a project
+    function isProjectCollaborator(projectId) {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/projects/$(projectId)) &&
+        request.auth.uid in get(/databases/$(database)/documents/projects/$(projectId)).data.collaborators.map(c, c.userId);
     }
-    
+
     // ================================================
     // PUBLIC READ ACCESS FOR IOT DEVICES (NO AUTH REQUIRED)
     // ================================================
-    
+
     // manual_projects - PUBLIC READ for Arduino water pump control
     match /manual_projects/{projectId} {
       // Allow ANYONE to read (no authentication required)
       // This allows Arduino to check timerActive field
       allow read: if true;
-      
+
       // Keep existing write rules for authenticated users
-      allow update, delete: if request.auth != null && 
+      allow update, delete: if request.auth != null &&
         resource != null && request.auth.uid == resource.data.userId;
-      allow create: if request.auth != null && 
+      allow create: if request.auth != null &&
         request.auth.uid == request.resource.data.userId;
     }
-    
+
     // projects - PUBLIC READ for Arduino mixer control
     match /projects/{projectId} {
       // Allow ANYONE to read (no authentication required)
       // This allows Arduino to check 'up' field
       allow read: if true;
-      
-      // Keep existing write rules for authenticated users
-      allow update, delete: if request.auth != null && 
-        resource.data.userId == request.auth.uid;
-      allow create: if request.auth != null && 
+
+      // Allow creator and collaborators to update/delete projects
+      allow update, delete: if request.auth != null &&
+        (resource.data.userId == request.auth.uid || isProjectCollaborator(projectId));
+      allow create: if request.auth != null &&
         request.resource.data.userId == request.auth.uid;
     }
     

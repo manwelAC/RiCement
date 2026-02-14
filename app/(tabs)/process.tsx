@@ -25,18 +25,19 @@ interface Project {
   blocks: number;
   estimatedTime: string;
   remainingTime?: number; // in seconds, for countdown timer (1 minute per block)
-  pouringTime?: number; // in seconds, for pouring countdown (10 seconds)
+  pouringTime?: number; // in seconds, for pouring countdown
   completedBlocks?: number; // Number of blocks completed so far
   date: string;
-  status: 'Queue' | 'Pouring' | 'Mixing' | 'Pouring2' | 'Paused' | 'Completed';
+  status: 'Queue' | 'Pouring' | 'Mixing' | 'Pouring2' | 'Mixing2' | 'Paused' | 'Completed';
   userId: string;
   companyId?: string;
   collaborators?: Collaborator[];
   queuePosition?: number; // Position in queue
   pouringActive?: boolean; // Active during Pouring and Pouring2 phases
-  pausedStatus?: 'Pouring' | 'Mixing' | 'Pouring2'; // Store the status before pausing
+  pausedStatus?: 'Pouring' | 'Mixing' | 'Pouring2' | 'Mixing2'; // Store the status before pausing
   up?: boolean; // True when pouringActive is true (pump going up)
   down?: boolean; // True when pouringActive is false (pump going down)
+  currentMaterial?: 'sand' | 'cement' | 'rha' | 'water' | null; // Track which material is being dispensed during Pouring
 }
 
 interface InventoryItem {
@@ -128,6 +129,9 @@ export default function ProcessScreen() {
   // Project details modal state
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isProjectDetailsModalVisible, setIsProjectDetailsModalVisible] = useState(false);
+  const [isProjectActionSheetVisible, setIsProjectActionSheetVisible] = useState(false);
+  const [isAddBlocksModalVisible, setIsAddBlocksModalVisible] = useState(false);
+  const [addBlocksInput, setAddBlocksInput] = useState('');
 
   // Timer for countdown
   const [timer, setTimer] = useState<number | null>(null);
@@ -189,9 +193,9 @@ export default function ProcessScreen() {
   };
 
   // Function to calculate estimated time based on blocks
-  // Per block: 20s Pouring + 60s Mixing + 10s Pouring2 = 90 seconds per block
+  // Per block: 66s Pouring (Sand 12 + Cement 21 + RHA 6 + Water 27) + 120s Mixing + 10s Pouring2 + 26s Mixing2 = 222 seconds per block
   const calculateEstimatedTime = (numberOfBlocks: number): string => {
-    const secondsPerBlock = 90; // 20 + 60 + 10
+    const secondsPerBlock = 222; // 66 + 120 + 10 + 26
     const totalSeconds = numberOfBlocks * secondsPerBlock;
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -230,23 +234,32 @@ export default function ProcessScreen() {
             return project;
           }
           
-          // Handle Pouring (first pouring - 20 seconds)
+          // Handle Pouring (first pouring - 66 seconds total with material breakdown)
           if (project.status === 'Pouring' && project.pouringTime !== undefined && project.pouringTime > 0) {
             hasChanged = true;
             const newPouringTime = project.pouringTime - 1;
             
+            // Determine which material is currently being dispensed
+            // Sand: 12, Cement: 21, RHA: 6, Water: 27 = 66 total
+            let currentMaterial: 'sand' | 'cement' | 'rha' | 'water' = 'sand';
+            if (newPouringTime >= 54) currentMaterial = 'sand'; // 66-12 = 54
+            else if (newPouringTime >= 33) currentMaterial = 'cement'; // 54-21 = 33
+            else if (newPouringTime >= 27) currentMaterial = 'rha'; // 33-6 = 27
+            else currentMaterial = 'water'; // 27-27 = 0
+            
             // Update Firebase with new pouring time every second
-            firebaseService.updateProject(project.id, { pouringTime: newPouringTime } as any)
+            firebaseService.updateProject(project.id, { pouringTime: newPouringTime, currentMaterial } as any)
               .catch(error => console.error('Error updating pouring time in Firebase:', error));
             
-            // If pouring time reaches 0, move to Mixing (60 seconds per block) - Activate hardware
+            // If pouring time reaches 0, move to Mixing (120 seconds for first mixing phase)
             if (newPouringTime <= 0) {
               firebaseService.updateProject(project.id, { 
                 status: 'Mixing',
                 pouringTime: 0,
-                remainingTime: 60, // 1 minute mixing per block
+                remainingTime: 120, // 120 seconds for first mixing phase
                 timerActive: true, // Hardware activates during Mixing
-                pouringActive: false // Deactivate pouring
+                pouringActive: false, // Deactivate pouring
+                currentMaterial: null
               } as any)
                 .then(() => console.log(`Project ${project.id} moved to Mixing in Firebase`))
                 .catch(error => console.error('Error updating project status in Firebase:', error));
@@ -255,14 +268,15 @@ export default function ProcessScreen() {
                 ...project, 
                 pouringTime: 0, 
                 status: 'Mixing' as const,
-                remainingTime: 60 // 1 minute mixing per block
+                remainingTime: 120, // 120 seconds for first mixing phase
+                currentMaterial: null
               };
             }
             
-            return { ...project, pouringTime: newPouringTime };
+            return { ...project, pouringTime: newPouringTime, currentMaterial };
           }
           
-          // Handle Mixing (60 seconds per block)
+          // Handle Mixing (120 seconds - first mixing phase)
           if (project.status === 'Mixing' && project.remainingTime !== undefined && project.remainingTime > 0) {
             hasChanged = true;
             const newRemainingTime = project.remainingTime - 1;
@@ -276,7 +290,7 @@ export default function ProcessScreen() {
               firebaseService.updateProject(project.id, { 
                 status: 'Pouring2',
                 remainingTime: 0,
-                pouringTime: 10,
+                pouringTime: 10, // 10 seconds for second pouring
                 timerActive: false, // Hardware deactivates after Mixing
                 pouringActive: true, // Activate pouring for second pour
                 up: false, // Set to false after mixing
@@ -305,8 +319,40 @@ export default function ProcessScreen() {
             firebaseService.updateProject(project.id, { pouringTime: newPouringTime } as any)
               .catch(error => console.error('Error updating pouring time in Firebase:', error));
             
-            // If second pouring time reaches 0, check if all blocks are completed
+            // If second pouring time reaches 0, move to second mixing phase
             if (newPouringTime <= 0) {
+              firebaseService.updateProject(project.id, { 
+                status: 'Mixing2',
+                pouringTime: 0,
+                remainingTime: 26, // 26 seconds for second mixing phase
+                timerActive: true, // Hardware activates for final mixing
+                pouringActive: false
+              } as any)
+                .then(() => console.log(`Project ${project.id} moved to Mixing2 in Firebase`))
+                .catch(error => console.error('Error updating project status in Firebase:', error));
+              
+              return { 
+                ...project, 
+                pouringTime: 0, 
+                status: 'Mixing2' as const,
+                remainingTime: 26 // 26 seconds for second mixing phase
+              };
+            }
+            
+            return { ...project, pouringTime: newPouringTime };
+          }
+          
+          // Handle Mixing2 (26 seconds - second mixing phase)
+          if (project.status === 'Mixing2' && project.remainingTime !== undefined && project.remainingTime > 0) {
+            hasChanged = true;
+            const newRemainingTime = project.remainingTime - 1;
+            
+            // Update Firebase with new remaining time every second
+            firebaseService.updateProject(project.id, { remainingTime: newRemainingTime } as any)
+              .catch(error => console.error('Error updating remaining time in Firebase:', error));
+            
+            // If second mixing time reaches 0, check if all blocks are completed
+            if (newRemainingTime <= 0) {
               const completedBlocks = (project.completedBlocks || 0) + 1;
               
               // Get current user and update their contribution
@@ -322,7 +368,7 @@ export default function ProcessScreen() {
                 // All blocks completed - mark as Completed and add to inventory
                 firebaseService.updateProject(project.id, { 
                   status: 'Completed',
-                  pouringTime: 0,
+                  remainingTime: 0,
                   completedBlocks: completedBlocks,
                   pouringActive: false
                 } as any)
@@ -335,7 +381,7 @@ export default function ProcessScreen() {
                 
                 return { 
                   ...project, 
-                  pouringTime: 0, 
+                  remainingTime: 0, 
                   status: 'Completed' as const,
                   completedBlocks: completedBlocks
                 };
@@ -343,24 +389,26 @@ export default function ProcessScreen() {
                 // More blocks to process - go back to Pouring for next block
                 firebaseService.updateProject(project.id, { 
                   status: 'Pouring',
-                  pouringTime: 10,
+                  pouringTime: 66, // 66 seconds for pouring phase
                   completedBlocks: completedBlocks,
-                  timerActive: false, // Hardware stays inactive during Pouring
-                  pouringActive: true // Activate pouring for next block
+                  timerActive: false, // Hardware inactive during Pouring
+                  pouringActive: true, // Activate pouring for next block
+                  currentMaterial: 'sand' // Start with sand
                 } as any)
                   .then(() => console.log(`Project ${project.id} starting block ${completedBlocks + 1} of ${project.blocks}`))
                   .catch(error => console.error('Error updating project status in Firebase:', error));
                 
                 return { 
                   ...project, 
-                  pouringTime: 10,
+                  pouringTime: 66, // 66 seconds for pouring phase
                   status: 'Pouring' as const,
-                  completedBlocks: completedBlocks
+                  completedBlocks: completedBlocks,
+                  currentMaterial: 'sand'
                 };
               }
             }
             
-            return { ...project, pouringTime: newPouringTime };
+            return { ...project, remainingTime: newRemainingTime };
           }
           
           return project;
@@ -368,7 +416,7 @@ export default function ProcessScreen() {
         
         // Check if we need to start the next project in queue
         const hasActiveProject = updatedProjects.some(p => 
-          p.status === 'Pouring' || p.status === 'Mixing' || p.status === 'Pouring2'
+          p.status === 'Pouring' || p.status === 'Mixing' || p.status === 'Pouring2' || p.status === 'Mixing2'
         );
         
         if (!hasActiveProject) {
@@ -380,10 +428,11 @@ export default function ProcessScreen() {
                 // Update Firebase to Pouring with initial timer values
                 firebaseService.updateProject(p.id, { 
                   status: 'Pouring',
-                  pouringTime: 10,
+                  pouringTime: 66, // 66 seconds for pouring phase
                   completedBlocks: 0,
                   timerActive: false, // Hardware inactive during Pouring
-                  pouringActive: true // Activate pouring
+                  pouringActive: true, // Activate pouring
+                  currentMaterial: 'sand' // Start with sand
                 } as any)
                   .then(() => console.log(`Project ${p.id} started Pouring block 1 of ${p.blocks} in Firebase`))
                   .catch(error => console.error('Error updating project status in Firebase:', error));
@@ -391,8 +440,9 @@ export default function ProcessScreen() {
                 return { 
                   ...p, 
                   status: 'Pouring' as const,
-                  pouringTime: 10, // 10 seconds for first pouring
-                  completedBlocks: 0
+                  pouringTime: 66, // 66 seconds for pouring phase
+                  completedBlocks: 0,
+                  currentMaterial: 'sand'
                 };
               }
               return p;
@@ -447,19 +497,6 @@ export default function ProcessScreen() {
       }
     };
   }, []);
-
-  // Restart timer whenever projects change (to handle new pending projects)
-  useEffect(() => {
-    const hasActiveProjects = projects.some(p => 
-      (p.status === 'Pouring' && p.pouringTime && p.pouringTime > 0) ||
-      (p.status === 'Mixing' && p.remainingTime && p.remainingTime > 0) ||
-      (p.status === 'Pouring2' && p.pouringTime && p.pouringTime > 0) ||
-      p.status === 'Queue'
-    );
-    if (hasActiveProjects) {
-      startCountdownTimer();
-    }
-  }, [projects.length]);
 
   // Auto-calculate time whenever blocks value changes
   useEffect(() => {
@@ -745,10 +782,13 @@ export default function ProcessScreen() {
         }
         
         if (updatedProject.status === 'Mixing' && updatedProject.remainingTime === undefined) {
-          updatedProject = { ...updatedProject, remainingTime: 60 };
+          updatedProject = { ...updatedProject, remainingTime: 120 };
+        }
+        if (updatedProject.status === 'Mixing2' && updatedProject.remainingTime === undefined) {
+          updatedProject = { ...updatedProject, remainingTime: 26 };
         }
         if (updatedProject.status === 'Pouring' && updatedProject.pouringTime === undefined) {
-          updatedProject = { ...updatedProject, pouringTime: 20 };
+          updatedProject = { ...updatedProject, pouringTime: 66, currentMaterial: 'sand' };
         }
         if (updatedProject.status === 'Pouring2' && updatedProject.pouringTime === undefined) {
           updatedProject = { ...updatedProject, pouringTime: 10 };
@@ -1458,7 +1498,7 @@ export default function ProcessScreen() {
       const project = projects.find(p => p.id === projectId);
       if (!project) return;
 
-      const statusOrder: Project['status'][] = ['Queue', 'Pouring', 'Mixing', 'Pouring2', 'Completed'];
+      const statusOrder: Project['status'][] = ['Queue', 'Pouring', 'Mixing', 'Pouring2', 'Mixing2', 'Completed'];
       const currentIndex = statusOrder.indexOf(project.status);
       const nextIndex = (currentIndex + 1) % statusOrder.length;
       const newStatus = statusOrder[nextIndex];
@@ -1567,6 +1607,116 @@ export default function ProcessScreen() {
     return '#FF3333'; // Red - Low
   };
 
+  // Material consumption per block (as percentage of tank capacity)
+  // Based on the pouring sequence: Sand, Cement, RHA, Water
+  const getMaterialConsumptionPerBlock = () => {
+    return {
+      sand: 8,      // 8% per block
+      cement: 6,    // 6% per block
+      rha: 5,       // 5% per block
+      water: 10,    // 10% per block
+    };
+  };
+
+  // Check if materials are sufficient for requested blocks
+  const checkMaterialsSufficient = (blocksToAdd: number): { sufficient: boolean; message: string; materials: any } => {
+    const consumption = getMaterialConsumptionPerBlock();
+    const totalConsumption = {
+      sand: consumption.sand * blocksToAdd,
+      cement: consumption.cement * blocksToAdd,
+      rha: consumption.rha * blocksToAdd,
+      water: consumption.water * blocksToAdd,
+    };
+
+    const materials = {
+      sand: { current: materialLevels.sand, needed: totalConsumption.sand, sufficient: materialLevels.sand >= totalConsumption.sand },
+      cement: { current: materialLevels.cement, needed: totalConsumption.cement, sufficient: materialLevels.cement >= totalConsumption.cement },
+      rha: { current: materialLevels.rha, needed: totalConsumption.rha, sufficient: materialLevels.rha >= totalConsumption.rha },
+      water: { current: materialLevels.water, needed: totalConsumption.water, sufficient: materialLevels.water >= totalConsumption.water },
+    };
+
+    const allSufficient = Object.values(materials).every(m => m.sufficient);
+
+    let message = allSufficient
+      ? `✅ Sapat ang raw materials para sa ${blocksToAdd} blocks!\n\n`
+      : `❌ Kulang ang raw materials!\n\n`;
+
+    message += `Material Status:\n`;
+    message += `🟫 Sand: ${materialLevels.sand}% (Need: ${totalConsumption.sand}%)\n`;
+    message += `⚪ Cement: ${materialLevels.cement}% (Need: ${totalConsumption.cement}%)\n`;
+    message += `🟡 RHA: ${materialLevels.rha}% (Need: ${totalConsumption.rha}%)\n`;
+    message += `💧 Water: ${materialLevels.water}% (Need: ${totalConsumption.water}%)`;
+
+    return { sufficient: allSufficient, message, materials };
+  };
+
+  // Handle adding blocks to project
+  const handleAddBlocks = async () => {
+    const blocksToAdd = parseInt(addBlocksInput);
+
+    if (!blocksToAdd || blocksToAdd <= 0) {
+      Alert.alert('Error', 'Please enter a valid number of blocks');
+      return;
+    }
+
+    if (!selectedProject) {
+      Alert.alert('Error', 'No project selected');
+      return;
+    }
+
+    // Check material sufficiency
+    const materialCheck = checkMaterialsSufficient(blocksToAdd);
+
+    Alert.alert(
+      'Raw Materials Status',
+      materialCheck.message,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: materialCheck.sufficient ? 'Start Process' : 'Back',
+          style: materialCheck.sufficient ? 'default' : 'cancel',
+          onPress: async () => {
+            if (materialCheck.sufficient) {
+              try {
+                // Update project to add blocks and start processing
+                const newBlocksCount = (selectedProject.blocks || 0) + blocksToAdd;
+                const updatedProject = {
+                  ...selectedProject,
+                  blocks: newBlocksCount,
+                  status: 'Pouring' as const,
+                  pouringTime: 66,
+                  pouringActive: true,
+                  completedBlocks: selectedProject.completedBlocks || 0,
+                };
+
+                await firebaseService.updateProject(selectedProject.id, {
+                  blocks: newBlocksCount,
+                  status: 'Pouring',
+                  pouringTime: 66,
+                  pouringActive: true,
+                });
+
+                // Update local state
+                setProjects(prev => prev.map(p =>
+                  p.id === selectedProject.id ? updatedProject : p
+                ));
+
+                setIsAddBlocksModalVisible(false);
+                setAddBlocksInput('');
+                setIsProjectActionSheetVisible(false);
+
+                Alert.alert('Success', `Added ${blocksToAdd} blocks! Process started.`);
+              } catch (error: any) {
+                console.error('Error adding blocks:', error);
+                Alert.alert('Error', 'Failed to add blocks');
+              }
+            }
+          }
+        }
+      ]
+    );
+  };
+
   const handleToggleMaterialLevels = () => {
     const isCurrentlyLow = areMaterialsLow();
     
@@ -1609,6 +1759,37 @@ export default function ProcessScreen() {
         ]
       );
     }
+  };
+
+  // Helper function to determine which material is being poured
+  const getCurrentMaterial = (project: Project): string => {
+    if (project.status !== 'Pouring' || !project.pouringTime) return '';
+    
+    const pouringTime = project.pouringTime;
+    // Material sequence: Sand(12) → Cement(21) → RHA(6) → Water(27)
+    // Total: 66 seconds
+    if (pouringTime > 54) return 'Sand'; // Remaining time > 54s (66-12)
+    if (pouringTime > 33) return 'Cement'; // Remaining time > 33s (66-12-21)
+    if (pouringTime > 27) return 'RHA'; // Remaining time > 27s (66-12-21-6)
+    return 'Water';
+  };
+
+  // Helper function to get material display name
+  const getMaterialDisplayName = (material: string): string => {
+    const materialNames: { [key: string]: string } = {
+      'sand': 'Buhangin',
+      'cement': 'Semento',
+      'rha': 'RHA',
+      'water': 'Tubig'
+    };
+    return materialNames[material.toLowerCase()] || material;
+  };
+
+  // Helper function to find the currently active project
+  const getActiveProject = (): Project | null => {
+    return projects.find(p => 
+      p.status === 'Pouring' || p.status === 'Mixing' || p.status === 'Pouring2' || p.status === 'Mixing2'
+    ) || null;
   };
 
   return (
@@ -1727,39 +1908,8 @@ export default function ProcessScreen() {
                 key={project.id} 
                 style={styles.projectCard}
                 onPress={() => {
-                  const currentBlock = (project.completedBlocks || 0) + 1;
-                  const blockProgress = project.status !== 'Queue' && project.status !== 'Completed' 
-                    ? `Block ${currentBlock} of ${project.blocks}` 
-                    : '';
-                  
-                  const timeDisplay = project.status === 'Pouring' && project.pouringTime !== undefined
-                    ? `${project.pouringTime}s pouring remaining`
-                    : project.status === 'Mixing' && project.remainingTime !== undefined
-                    ? `${project.remainingTime}s mixing remaining`
-                    : project.status === 'Pouring2' && project.pouringTime !== undefined
-                    ? `${project.pouringTime}s final pouring remaining`
-                    : project.status === 'Queue'
-                    ? 'Waiting in queue...'
-                    : project.status === 'Completed'
-                    ? `All ${project.blocks} blocks completed!`
-                    : `${project.estimatedTime} estimated`;
-                  
-                  Alert.alert(
-                    project.name,
-                    `📦 Kabuuang RHB: ${project.blocks}\n${blockProgress ? `🔄 Progress: ${blockProgress}\n` : ''}📅 Petsa: ${project.date}\n⏱️ Oras: ${timeDisplay}\n📊 Status: ${project.status}`,
-                    [
-                      { text: 'Isara', style: 'cancel' },
-                      { 
-                        text: 'Baguhin', 
-                        onPress: () => handleEditProject(project)
-                      },
-                      { 
-                        text: 'Burahin', 
-                        style: 'destructive',
-                        onPress: () => handleDeleteProject(project.id)
-                      }
-                    ]
-                  );
+                  setSelectedProject(project);
+                  setIsProjectActionSheetVisible(true);
                 }}
               >
                 <View style={styles.projectCardHeader}>
@@ -1901,7 +2051,9 @@ export default function ProcessScreen() {
                       />
                     </View>
                     <ThemedText style={styles.progressText}>
-                      {project.status === 'Pouring' ? 'Pagbuhos ng materyales...' : 'Huling paglalagay...'} ({project.pouringTime}s)
+                      {project.status === 'Pouring' 
+                        ? `Pagbuhos ng ${getMaterialDisplayName(getCurrentMaterial(project))}...` 
+                        : 'Huling paglalagay...'} ({project.pouringTime}s)
                     </ThemedText>
                   </View>
                 )}
@@ -2529,6 +2681,163 @@ export default function ProcessScreen() {
           </View>
         </Modal>
 
+        {/* Project Action Sheet Modal - iOS Style */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={isProjectActionSheetVisible}
+          onRequestClose={() => setIsProjectActionSheetVisible(false)}
+        >
+          <Pressable
+            style={styles.actionSheetOverlay}
+            onPress={() => setIsProjectActionSheetVisible(false)}
+          >
+            <View style={styles.actionSheetContent}>
+              {/* Project Info Card */}
+              <View style={styles.actionSheetHeader}>
+                <ThemedText style={styles.actionSheetProjectName}>{selectedProject?.name}</ThemedText>
+
+                <View style={styles.actionSheetInfoGrid}>
+                  <View style={styles.actionSheetInfoItem}>
+                    <Ionicons name="cube-outline" size={16} color="#007AFF" />
+                    <ThemedText style={styles.actionSheetInfoLabel}>Blocks</ThemedText>
+                    <ThemedText style={styles.actionSheetInfoValue}>{selectedProject?.blocks}</ThemedText>
+                  </View>
+
+                  <View style={styles.actionSheetInfoItem}>
+                    <Ionicons name="calendar-outline" size={16} color="#007AFF" />
+                    <ThemedText style={styles.actionSheetInfoLabel}>Date</ThemedText>
+                    <ThemedText style={styles.actionSheetInfoValue}>{selectedProject?.date}</ThemedText>
+                  </View>
+
+                  <View style={styles.actionSheetInfoItem}>
+                    <Ionicons name="flag-outline" size={16} color="#007AFF" />
+                    <ThemedText style={styles.actionSheetInfoLabel}>Status</ThemedText>
+                    <ThemedText style={[styles.actionSheetInfoValue, { color: getStatusColor(selectedProject?.status || '') }]}>
+                      {selectedProject?.status}
+                    </ThemedText>
+                  </View>
+                </View>
+              </View>
+
+              {/* Action Buttons */}
+              <View style={styles.actionSheetButtons}>
+                <Pressable
+                  style={styles.actionSheetButton}
+                  onPress={() => {
+                    if (selectedProject) {
+                      handleEditProject(selectedProject);
+                    }
+                    setIsProjectActionSheetVisible(false);
+                  }}
+                >
+                  <Ionicons name="pencil-outline" size={18} color="#007AFF" />
+                  <ThemedText style={styles.actionSheetButtonText}>Baguhin</ThemedText>
+                </Pressable>
+
+                <Pressable
+                  style={styles.actionSheetButton}
+                  onPress={() => {
+                    if (selectedProject) {
+                      setSelectedProject(selectedProject);
+                      setIsProjectDetailsModalVisible(true);
+                    }
+                    setIsProjectActionSheetVisible(false);
+                  }}
+                >
+                  <Ionicons name="information-circle-outline" size={18} color="#007AFF" />
+                  <ThemedText style={styles.actionSheetButtonText}>Tingnan ang Detalye</ThemedText>
+                </Pressable>
+
+                <Pressable
+                  style={[styles.actionSheetButton, styles.actionSheetButtonDanger]}
+                  onPress={() => {
+                    if (selectedProject) {
+                      handleDeleteProject(selectedProject.id);
+                    }
+                    setIsProjectActionSheetVisible(false);
+                  }}
+                >
+                  <Ionicons name="trash-outline" size={18} color="#FF3B30" />
+                  <ThemedText style={[styles.actionSheetButtonText, { color: '#FF3B30' }]}>Burahin</ThemedText>
+                </Pressable>
+
+                <Pressable
+                  style={styles.actionSheetButton}
+                  onPress={() => {
+                    setIsProjectActionSheetVisible(false);
+                    setIsAddBlocksModalVisible(true);
+                  }}
+                >
+                  <Ionicons name="add-circle-outline" size={18} color="#34C759" />
+                  <ThemedText style={[styles.actionSheetButtonText, { color: '#34C759' }]}>Magdagdag ng Blocks</ThemedText>
+                </Pressable>
+              </View>
+
+              {/* Cancel Button */}
+              <Pressable
+                style={styles.actionSheetCancelButton}
+                onPress={() => setIsProjectActionSheetVisible(false)}
+              >
+                <ThemedText style={styles.actionSheetCancelButtonText}>Isara</ThemedText>
+              </Pressable>
+            </View>
+          </Pressable>
+        </Modal>
+
+        {/* Add Blocks Modal */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={isAddBlocksModalVisible}
+          onRequestClose={() => {
+            setIsAddBlocksModalVisible(false);
+            setAddBlocksInput('');
+          }}
+        >
+          <Pressable
+            style={styles.addBlocksOverlay}
+            onPress={() => {
+              setIsAddBlocksModalVisible(false);
+              setAddBlocksInput('');
+            }}
+          >
+            <View style={styles.addBlocksModalContent}>
+              <ThemedText style={styles.addBlocksTitle}>Magdagdag ng Blocks</ThemedText>
+
+              <ThemedText style={styles.addBlocksLabel}>Ilang blocks ang gusto mong idagdag?</ThemedText>
+
+              <TextInput
+                style={styles.addBlocksInput}
+                placeholder="Ipasok ang bilang ng blocks"
+                placeholderTextColor="#8E8E93"
+                keyboardType="number-pad"
+                value={addBlocksInput}
+                onChangeText={setAddBlocksInput}
+              />
+
+              <View style={styles.addBlocksButtonsContainer}>
+                <Pressable
+                  style={[styles.addBlocksButton, styles.addBlocksCancelButton]}
+                  onPress={() => {
+                    setIsAddBlocksModalVisible(false);
+                    setAddBlocksInput('');
+                  }}
+                >
+                  <ThemedText style={styles.addBlocksCancelButtonText}>Bumalik</ThemedText>
+                </Pressable>
+
+                <Pressable
+                  style={[styles.addBlocksButton, styles.addBlocksConfirmButton]}
+                  onPress={handleAddBlocks}
+                >
+                  <ThemedText style={styles.addBlocksConfirmButtonText}>Magpatuloy</ThemedText>
+                </Pressable>
+              </View>
+            </View>
+          </Pressable>
+        </Modal>
+
         {/* Project Details Modal */}
         <ProjectDetailsModal
           visible={isProjectDetailsModalVisible}
@@ -2812,6 +3121,68 @@ export default function ProcessScreen() {
           </View>
         </Modal>
       </ScrollView>
+
+      {/* Floating Active Project Status */}
+      {getActiveProject() && (
+        <View style={styles.floatingStatusContainer}>
+          <View style={styles.floatingStatusContent}>
+            <View style={styles.floatingHeader}>
+              <View style={styles.floatingTitleSection}>
+                <Ionicons name="settings-outline" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+                <ThemedText style={styles.floatingTitle}>{getActiveProject()?.name}</ThemedText>
+              </View>
+              <View style={[styles.floatingStatusBadge, { backgroundColor: getStatusColor(getActiveProject()?.status || 'Queue') }]}>
+                <ThemedText style={styles.floatingStatusText}>{getActiveProject()?.status}</ThemedText>
+              </View>
+            </View>
+            
+            <View style={styles.floatingDetails}>
+              {getActiveProject()?.status === 'Pouring' && (
+                <View style={styles.floatingDetailRow}>
+                  <Ionicons name="water" size={16} color="#007AFF" style={{ marginRight: 8 }} />
+                  <ThemedText style={styles.floatingDetailLabel}>Pagbuhos: </ThemedText>
+                  <ThemedText style={styles.floatingDetailValue}>
+                    {getMaterialDisplayName(getCurrentMaterial(getActiveProject() || ({} as Project)))}
+                  </ThemedText>
+                  <ThemedText style={styles.floatingDetailTime}> ({getActiveProject()?.pouringTime}s)</ThemedText>
+                </View>
+              )}
+              
+              {getActiveProject()?.status === 'Mixing' && (
+                <View style={styles.floatingDetailRow}>
+                  <Ionicons name="git-merge-outline" size={16} color="#3498DB" style={{ marginRight: 8 }} />
+                  <ThemedText style={styles.floatingDetailLabel}>Paghahalo: </ThemedText>
+                  <ThemedText style={styles.floatingDetailTime}> ({getActiveProject()?.remainingTime}s)</ThemedText>
+                </View>
+              )}
+              
+              {getActiveProject()?.status === 'Pouring2' && (
+                <View style={styles.floatingDetailRow}>
+                  <Ionicons name="water" size={16} color="#9B59B6" style={{ marginRight: 8 }} />
+                  <ThemedText style={styles.floatingDetailLabel}>Pangalawang Pagbuhos: </ThemedText>
+                  <ThemedText style={styles.floatingDetailTime}> ({getActiveProject()?.pouringTime}s)</ThemedText>
+                </View>
+              )}
+              
+              {getActiveProject()?.status === 'Mixing2' && (
+                <View style={styles.floatingDetailRow}>
+                  <Ionicons name="git-merge-outline" size={16} color="#1abc9c" style={{ marginRight: 8 }} />
+                  <ThemedText style={styles.floatingDetailLabel}>Pangalawang Pagsasayaw: </ThemedText>
+                  <ThemedText style={styles.floatingDetailTime}> ({getActiveProject()?.remainingTime}s)</ThemedText>
+                </View>
+              )}
+              
+              <View style={styles.floatingDetailRow}>
+                <Ionicons name="cube-outline" size={16} color="#FF9900" style={{ marginRight: 8 }} />
+                <ThemedText style={styles.floatingDetailLabel}>Block: </ThemedText>
+                <ThemedText style={styles.floatingDetailValue}>
+                  {(getActiveProject()?.completedBlocks || 0) + 1}/{getActiveProject()?.blocks}
+                </ThemedText>
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
     </ThemedView>
   );
 }
@@ -3631,6 +4002,242 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  // Floating Status Component Styles
+  floatingStatusContainer: {
+    position: 'absolute',
+    top: 80,
+    left: 20,
+    right: 20,
+    zIndex: 100,
+  },
+  floatingStatusContent: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    elevation: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  floatingHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  floatingTitleSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  floatingTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    flex: 1,
+  },
+  floatingStatusBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    marginLeft: 8,
+  },
+  floatingStatusText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  floatingDetails: {
+    gap: 10,
+  },
+  floatingDetailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+  },
+  floatingDetailLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  floatingDetailValue: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#007AFF',
+  },
+  floatingDetailTime: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: 'rgba(255, 255, 255, 0.7)',
+    marginLeft: 4,
+  },
+
+  // Action Sheet Modal Styles
+  actionSheetOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'flex-end',
+  },
+  actionSheetContent: {
+    backgroundColor: '#F2F2F7',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingBottom: 34,
+  },
+  actionSheetHeader: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5EA',
+  },
+  actionSheetProjectName: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#000000',
+    marginBottom: 20,
+  },
+  actionSheetInfoGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  actionSheetInfoItem: {
+    flex: 1,
+    backgroundColor: '#F2F2F7',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  actionSheetInfoLabel: {
+    fontSize: 12,
+    color: '#8E8E93',
+    marginTop: 6,
+    fontWeight: '500',
+  },
+  actionSheetInfoValue: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#007AFF',
+    marginTop: 2,
+  },
+  actionSheetButtons: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    gap: 10,
+  },
+  actionSheetButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    gap: 10,
+  },
+  actionSheetButtonDanger: {
+    backgroundColor: 'rgba(255, 59, 48, 0.1)',
+  },
+  actionSheetButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#007AFF',
+  },
+  actionSheetCancelButton: {
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: 12,
+  },
+  actionSheetCancelButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#8E8E93',
+    textAlign: 'center',
+  },
+
+  // Add Blocks Modal Styles
+  addBlocksOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addBlocksModalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 24,
+    width: '85%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  addBlocksTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#000000',
+    marginBottom: 12,
+  },
+  addBlocksLabel: {
+    fontSize: 15,
+    color: '#8E8E93',
+    marginBottom: 16,
+    fontWeight: '500',
+  },
+  addBlocksInput: {
+    borderWidth: 1,
+    borderColor: '#E5E5EA',
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: '#000000',
+    marginBottom: 20,
+    backgroundColor: '#F2F2F7',
+  },
+  addBlocksButtonsContainer: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  addBlocksButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addBlocksCancelButton: {
+    backgroundColor: '#F2F2F7',
+  },
+  addBlocksCancelButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#8E8E93',
+  },
+  addBlocksConfirmButton: {
+    backgroundColor: '#34C759',
+  },
+  addBlocksConfirmButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 
 });
