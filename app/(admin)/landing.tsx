@@ -1,16 +1,21 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import {
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View
+  Image,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
+import Footer from '../../components/admin/Footer';
+import Header from '../../components/admin/Header';
 
 export default function LandingPage() {
   const router = useRouter();
+  const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
 
   if (Platform.OS !== 'web') {
     return null;
@@ -18,31 +23,7 @@ export default function LandingPage() {
 
   return (
     <ScrollView style={styles.container} scrollEventThrottle={16}>
-      {/* Navigation Bar */}
-      <View style={styles.navbar}>
-        <View style={styles.navContent}>
-          <View style={styles.logo}>
-            <Text style={styles.logoText}>RiCement</Text>
-          </View>
-          <View style={styles.navLinks}>
-            <Pressable onPress={() => {}} style={styles.navLink}>
-              <Text style={styles.navLinkText}>Mga Tampok</Text>
-            </Pressable>
-            <Pressable onPress={() => {}} style={styles.navLink}>
-              <Text style={styles.navLinkText}>Paano ito Gumagana</Text>
-            </Pressable>
-            <Pressable onPress={() => {}} style={styles.navLink}>
-              <Text style={styles.navLinkText}>Patungkol</Text>
-            </Pressable>
-            <Pressable 
-              onPress={() => router.push('/(admin)/login')}
-              style={styles.loginButton}
-            >
-              <Text style={styles.loginButtonText}>Sign In</Text>
-            </Pressable>
-          </View>
-        </View>
-      </View>
+      <Header />
 
       {/* Hero Section */}
       <View style={styles.hero}>
@@ -55,16 +36,7 @@ export default function LandingPage() {
           </Text>
           <View style={styles.heroButtons}>
             <Pressable 
-              onPress={() => router.push('/signup')}
-              style={({ pressed }) => [
-                styles.primaryButton,
-                pressed && styles.primaryButtonPressed
-              ]}
-            >
-              <Text style={styles.primaryButtonText}>Get Started</Text>
-            </Pressable>
-            <Pressable 
-              onPress={() => {}}
+              onPress={() => router.push('/(admin)/features')}
               style={({ pressed }) => [
                 styles.secondaryButton,
                 pressed && styles.secondaryButtonPressed
@@ -75,8 +47,90 @@ export default function LandingPage() {
           </View>
         </View>
         <View style={styles.heroImage}>
-          <View style={styles.imagePlaceholder}>
-            <Text style={styles.placeholderText}>🌾 IoT Innovation</Text>
+          <Image
+            source={require('../../public/images/Rice Husk.jpg')}
+            style={styles.heroImageContent}
+            resizeMode="cover"
+          />
+        </View>
+      </View>
+
+      {/* System Showcase Section */}
+      <View style={styles.systemShowcaseSection}>
+        <View style={styles.showcaseHeader}>
+          <Text style={styles.showcaseTitle}>The RiCement System</Text>
+          <Text style={styles.showcaseSubtitle}>Integrated IoT platform for intelligent production control</Text>
+        </View>
+
+        <View style={styles.systemGrid}>
+          {/* Hardware Component */}
+          <View style={styles.systemCard}>
+            <View style={styles.systemCardHeader}>
+              <MaterialCommunityIcons name="cog" size={32} color="#007AFF" />
+              <Text style={styles.systemCardTitle}>Smart Hardware</Text>
+            </View>
+            <View style={styles.systemCardFeature}>
+              <Text style={styles.featureBullet}>•</Text>
+              <Text style={styles.featureBulletText}>IoT sensors for real-time monitoring</Text>
+            </View>
+            <View style={styles.systemCardFeature}>
+              <Text style={styles.featureBullet}>•</Text>
+              <Text style={styles.featureBulletText}>Automated control systems</Text>
+            </View>
+            <View style={styles.systemCardFeature}>
+              <Text style={styles.featureBullet}>•</Text>
+              <Text style={styles.featureBulletText}>Temperature & humidity sensors</Text>
+            </View>
+          </View>
+
+          {/* Connection Arrow */}
+          <View style={styles.connectionArrow}>
+            <MaterialCommunityIcons name="arrow-left-right" size={24} color="#007AFF" />
+          </View>
+
+          {/* Software Platform */}
+          <View style={styles.systemCard}>
+            <View style={styles.systemCardHeader}>
+              <MaterialCommunityIcons name="cellphone" size={32} color="#007AFF" />
+              <Text style={styles.systemCardTitle}>Mobile & Web App</Text>
+            </View>
+            <View style={styles.systemCardFeature}>
+              <Text style={styles.featureBullet}>•</Text>
+              <Text style={styles.featureBulletText}>Live dashboard monitoring</Text>
+            </View>
+            <View style={styles.systemCardFeature}>
+              <Text style={styles.featureBullet}>•</Text>
+              <Text style={styles.featureBulletText}>Remote equipment control</Text>
+            </View>
+            <View style={styles.systemCardFeature}>
+              <Text style={styles.featureBullet}>•</Text>
+              <Text style={styles.featureBulletText}>Alerts & notifications</Text>
+            </View>
+          </View>
+
+          {/* Connection Arrow */}
+          <View style={styles.connectionArrow}>
+            <MaterialCommunityIcons name="arrow-left-right" size={24} color="#007AFF" />
+          </View>
+
+          {/* Cloud & Analytics */}
+          <View style={styles.systemCard}>
+            <View style={styles.systemCardHeader}>
+              <MaterialCommunityIcons name="cloud-outline" size={32} color="#007AFF" />
+              <Text style={styles.systemCardTitle}>Cloud Analytics</Text>
+            </View>
+            <View style={styles.systemCardFeature}>
+              <Text style={styles.featureBullet}>•</Text>
+              <Text style={styles.featureBulletText}>Data storage & processing</Text>
+            </View>
+            <View style={styles.systemCardFeature}>
+              <Text style={styles.featureBullet}>•</Text>
+              <Text style={styles.featureBulletText}>Advanced analytics engine</Text>
+            </View>
+            <View style={styles.systemCardFeature}>
+              <Text style={styles.featureBullet}>•</Text>
+              <Text style={styles.featureBulletText}>Historical data tracking</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -88,69 +142,154 @@ export default function LandingPage() {
         
         <View style={styles.featuresGrid}>
           {/* Feature 1 */}
-          <View style={styles.featureCard}>
+          <Pressable 
+            onPress={() => {}}
+            style={({ pressed }) => [
+              styles.featureCard,
+              pressed && styles.featureCardPressed
+            ]}
+          >
             <View style={styles.featureIcon}>
-              <Text style={styles.iconText}>📱</Text>
+              <MaterialCommunityIcons name="cellphone" size={44} color="#007AFF" />
             </View>
             <Text style={styles.featureTitle}>Mobile Control</Text>
             <Text style={styles.featureDescription}>
               Monitor and control your rice husk ash production from anywhere with our intuitive mobile app
             </Text>
-          </View>
+          </Pressable>
 
           {/* Feature 2 */}
-          <View style={styles.featureCard}>
+          <Pressable 
+            onPress={() => {}}
+            style={({ pressed }) => [
+              styles.featureCard,
+              pressed && styles.featureCardPressed
+            ]}
+          >
             <View style={styles.featureIcon}>
-              <Text style={styles.iconText}>🤖</Text>
+              <MaterialCommunityIcons name="robot" size={44} color="#007AFF" />
             </View>
             <Text style={styles.featureTitle}>IoT Automation</Text>
             <Text style={styles.featureDescription}>
               Automated monitoring system ensures optimal production conditions and maximum efficiency
             </Text>
-          </View>
+          </Pressable>
 
           {/* Feature 3 */}
-          <View style={styles.featureCard}>
+          <Pressable 
+            onPress={() => {}}
+            style={({ pressed }) => [
+              styles.featureCard,
+              pressed && styles.featureCardPressed
+            ]}
+          >
             <View style={styles.featureIcon}>
-              <Text style={styles.iconText}>📊</Text>
+              <MaterialCommunityIcons name="chart-box-outline" size={44} color="#007AFF" />
             </View>
             <Text style={styles.featureTitle}>Real-time Analytics</Text>
             <Text style={styles.featureDescription}>
               Track production metrics, efficiency rates, and quality standards in real-time
             </Text>
-          </View>
+          </Pressable>
 
           {/* Feature 4 */}
-          <View style={styles.featureCard}>
+          <Pressable 
+            onPress={() => {}}
+            style={({ pressed }) => [
+              styles.featureCard,
+              pressed && styles.featureCardPressed
+            ]}
+          >
             <View style={styles.featureIcon}>
-              <Text style={styles.iconText}>♻️</Text>
+              <MaterialCommunityIcons name="recycle" size={44} color="#007AFF" />
             </View>
             <Text style={styles.featureTitle}>Sustainable Impact</Text>
             <Text style={styles.featureDescription}>
               Convert agricultural waste into valuable cement additives, reducing environmental impact
             </Text>
-          </View>
+          </Pressable>
 
           {/* Feature 5 */}
-          <View style={styles.featureCard}>
+          <Pressable 
+            onPress={() => {}}
+            style={({ pressed }) => [
+              styles.featureCard,
+              pressed && styles.featureCardPressed
+            ]}
+          >
             <View style={styles.featureIcon}>
-              <Text style={styles.iconText}>💰</Text>
+              <MaterialCommunityIcons name="cash-multiple" size={44} color="#007AFF" />
             </View>
             <Text style={styles.featureTitle}>Farmer Empowerment</Text>
             <Text style={styles.featureDescription}>
               Create additional income streams for farmers by turning rice husk waste into premium products
             </Text>
-          </View>
+          </Pressable>
 
           {/* Feature 6 */}
-          <View style={styles.featureCard}>
+          <Pressable 
+            onPress={() => {}}
+            style={({ pressed }) => [
+              styles.featureCard,
+              pressed && styles.featureCardPressed
+            ]}
+          >
             <View style={styles.featureIcon}>
-              <Text style={styles.iconText}>🔒</Text>
+              <MaterialCommunityIcons name="shield-check" size={44} color="#007AFF" />
             </View>
             <Text style={styles.featureTitle}>Secure & Reliable</Text>
             <Text style={styles.featureDescription}>
               Enterprise-grade security and reliable infrastructure for critical production processes
             </Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.viewAllButtonContainer}>
+          <Pressable 
+            onPress={() => router.push('/(admin)/features')}
+            style={({ pressed }) => [
+              styles.viewAllButton,
+              pressed && styles.viewAllButtonPressed
+            ]}
+          >
+            <Text style={styles.viewAllButtonText}>View All Features</Text>
+            <MaterialCommunityIcons name="arrow-right" size={18} color="#007AFF" />
+          </Pressable>
+        </View>
+      </View>
+
+      {/* Product Showcase Section */}
+      <View style={styles.productShowcaseSection}>
+        <View style={styles.productShowcaseContent}>
+          <View style={styles.productTextContent}>
+            <Text style={styles.productTitle}>Premium Quality Output</Text>
+            <Text style={styles.productSubtitle}>
+              Transform raw materials into high-quality cement additives
+            </Text>
+            <Text style={styles.productDescription}>
+              Our IoT-powered system ensures consistent quality and performance of hollow blocks and cement products infused with rice husk ash. Every batch meets international standards for durability, strength, and sustainability.
+            </Text>
+            <View style={styles.productFeatures}>
+              <View style={styles.productFeature}>
+                <MaterialCommunityIcons name="check-circle" size={24} color="#007AFF" />
+                <Text style={styles.productFeatureText}>Enhanced durability</Text>
+              </View>
+              <View style={styles.productFeature}>
+                <MaterialCommunityIcons name="check-circle" size={24} color="#007AFF" />
+                <Text style={styles.productFeatureText}>Superior strength</Text>
+              </View>
+              <View style={styles.productFeature}>
+                <MaterialCommunityIcons name="check-circle" size={24} color="#007AFF" />
+                <Text style={styles.productFeatureText}>Eco-friendly composition</Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.productImageContainer}>
+            <Image
+              source={require('../../public/images/Hollow Blocks.jpg')}
+              style={styles.productImage}
+              resizeMode="cover"
+            />
           </View>
         </View>
       </View>
@@ -218,6 +357,19 @@ export default function LandingPage() {
             </Text>
           </View>
         </View>
+
+        <View style={styles.viewAllButtonContainer}>
+          <Pressable 
+            onPress={() => router.push('/(admin)/how-it-works')}
+            style={({ pressed }) => [
+              styles.viewAllButton,
+              pressed && styles.viewAllButtonPressed
+            ]}
+          >
+            <Text style={styles.viewAllButtonText}>Learn More</Text>
+            <MaterialCommunityIcons name="arrow-right" size={18} color="#007AFF" />
+          </Pressable>
+        </View>
       </View>
 
       {/* Why Rice Husk Section */}
@@ -274,40 +426,7 @@ export default function LandingPage() {
         </View>
       </View>
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <View style={styles.footerContent}>
-          <View style={styles.footerSection}>
-            <Text style={styles.footerTitle}>RiCement</Text>
-            <Text style={styles.footerText}>
-              IoT-Based Rice Husk Ash Production System
-            </Text>
-          </View>
-          <View style={styles.footerSection}>
-            <Text style={styles.footerSectionTitle}>Product</Text>
-            <Text style={styles.footerLink}>Features</Text>
-            <Text style={styles.footerLink}>Pricing</Text>
-            <Text style={styles.footerLink}>Security</Text>
-          </View>
-          <View style={styles.footerSection}>
-            <Text style={styles.footerSectionTitle}>Company</Text>
-            <Text style={styles.footerLink}>About</Text>
-            <Text style={styles.footerLink}>Blog</Text>
-            <Text style={styles.footerLink}>Contact</Text>
-          </View>
-          <View style={styles.footerSection}>
-            <Text style={styles.footerSectionTitle}>Legal</Text>
-            <Text style={styles.footerLink}>Privacy</Text>
-            <Text style={styles.footerLink}>Terms</Text>
-            <Text style={styles.footerLink}>License</Text>
-          </View>
-        </View>
-        <View style={styles.footerBottom}>
-          <Text style={styles.footerBottomText}>
-            © 2025 RiCement. All rights reserved.
-          </Text>
-        </View>
-      </View>
+      <Footer />
     </ScrollView>
   );
 }
@@ -318,95 +437,45 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
 
-  // Navbar
-  navbar: {
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    position: 'sticky' as any,
-    top: 0,
-    zIndex: 100,
-  },
-  navContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    maxWidth: 1200,
-    marginHorizontal: 'auto' as any,
-  },
-  logo: {
-    flex: 1,
-  },
-  logoText: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#1a1a1a',
-    letterSpacing: -0.5,
-  },
-  navLinks: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 32,
-  },
-  navLink: {
-    padding: 8,
-  },
-  navLinkText: {
-    fontSize: 14,
-    color: '#666',
-    fontWeight: '500',
-  },
-  loginButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: '#007AFF',
-    borderRadius: 8,
-  },
-  loginButtonText: {
-    color: '#007AFF',
-    fontWeight: '600',
-    fontSize: 14,
-  },
 
-  // Hero Section
+
+  // Hero Section - iOS Style
   hero: {
     flexDirection: 'row' as any,
-    paddingVertical: 80,
+    paddingVertical: 60,
     paddingHorizontal: 24,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#fff',
     alignItems: 'center',
     gap: 60,
   },
   heroContent: {
     flex: 1,
-    maxWidth: 500,
+    maxWidth: 520,
   },
   heroTitle: {
-    fontSize: 56,
-    fontWeight: '700',
-    color: '#1a1a1a',
-    marginBottom: 24,
-    lineHeight: 64,
+    fontSize: 64,
+    fontWeight: '800',
+    color: '#000',
+    marginBottom: 20,
+    lineHeight: 72,
+    letterSpacing: -1.5,
   },
   heroSubtitle: {
     fontSize: 18,
-    color: '#666',
+    color: '#555',
     marginBottom: 32,
     lineHeight: 28,
     fontWeight: '400',
   },
   heroButtons: {
     flexDirection: 'row' as any,
-    gap: 16,
+    gap: 12,
   },
   primaryButton: {
     backgroundColor: '#007AFF',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 8,
+    paddingHorizontal: 28,
+    paddingVertical: 14,
+    borderRadius: 12,
   },
   primaryButtonPressed: {
     backgroundColor: '#0051D5',
@@ -417,14 +486,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   secondaryButton: {
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: '#007AFF',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 8,
+    paddingHorizontal: 28,
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: '#f0f7ff',
   },
   secondaryButtonPressed: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#e8f0ff',
   },
   secondaryButtonText: {
     color: '#007AFF',
@@ -433,84 +503,322 @@ const styles = StyleSheet.create({
   },
   heroImage: {
     flex: 1,
-    minHeight: 400,
+    minHeight: 420,
   },
-  imagePlaceholder: {
+  heroImageContent: {
     width: '100%',
-    height: 400,
-    backgroundColor: '#e8f4f8',
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeholderText: {
-    fontSize: 48,
+    height: 420,
+    borderRadius: 20,
+    overflow: 'hidden' as any,
   },
 
-  // Features Section
+  // System Showcase Section
+  systemShowcaseSection: {
+    paddingVertical: 80,
+    paddingHorizontal: 24,
+    backgroundColor: '#f9f9f9',
+  },
+  showcaseHeader: {
+    marginBottom: 56,
+    maxWidth: 800,
+    marginHorizontal: 'auto' as any,
+  },
+  showcaseTitle: {
+    fontSize: 48,
+    fontWeight: '800',
+    color: '#000',
+    marginBottom: 12,
+    textAlign: 'center' as any,
+    letterSpacing: -1,
+  },
+  showcaseSubtitle: {
+    fontSize: 17,
+    color: '#666',
+    textAlign: 'center' as any,
+    lineHeight: 26,
+    fontWeight: '400',
+  },
+  systemGrid: {
+    flexDirection: 'row' as any,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+    marginBottom: 60,
+    flexWrap: 'wrap' as any,
+  },
+  systemCard: {
+    flex: 1,
+    minWidth: 280,
+    padding: 28,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+  },
+  systemCardHeader: {
+    flexDirection: 'row' as any,
+    alignItems: 'center',
+    marginBottom: 20,
+    gap: 12,
+  },
+  systemCardTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#000',
+  },
+  systemCardFeature: {
+    flexDirection: 'row' as any,
+    alignItems: 'flex-start',
+    gap: 12,
+    marginBottom: 12,
+  },
+  featureBullet: {
+    fontSize: 16,
+    color: '#007AFF',
+    fontWeight: '600',
+    marginTop: 2,
+  },
+  featureBulletText: {
+    fontSize: 15,
+    color: '#555',
+    flex: 1,
+    lineHeight: 22,
+  },
+  connectionArrow: {
+    alignItems: 'center' as any,
+  },
+  processFlowContainer: {
+    maxWidth: 900,
+    marginHorizontal: 'auto' as any,
+    paddingHorizontal: 24,
+  },
+  processFlowTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 28,
+    textAlign: 'center' as any,
+  },
+  flowSteps: {
+    flexDirection: 'row' as any,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 12,
+    flexWrap: 'wrap' as any,
+  },
+  flowStep: {
+    alignItems: 'center' as any,
+    minWidth: 100,
+  },
+  flowStepCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#007AFF',
+    justifyContent: 'center' as any,
+    alignItems: 'center' as any,
+    marginBottom: 10,
+  },
+  flowStepNumber: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  flowStepLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 4,
+  },
+  flowStepDesc: {
+    fontSize: 13,
+    color: '#999',
+  },
+  flowArrow: {
+    marginHorizontal: 4,
+  },
+  flowArrowText: {
+    fontSize: 20,
+    color: '#007AFF',
+    fontWeight: '300',
+  },
+
+  // Features Section - iOS Style
   featuresSection: {
     paddingVertical: 80,
     paddingHorizontal: 24,
     backgroundColor: '#fff',
   },
   sectionTitle: {
-    fontSize: 44,
-    fontWeight: '700',
-    color: '#1a1a1a',
+    fontSize: 48,
+    fontWeight: '800',
+    color: '#000',
     marginBottom: 12,
     textAlign: 'center' as any,
+    letterSpacing: -1,
   },
   sectionSubtitle: {
-    fontSize: 18,
+    fontSize: 17,
     color: '#666',
     textAlign: 'center' as any,
-    marginBottom: 56,
+    marginBottom: 48,
+    lineHeight: 26,
   },
   featuresGrid: {
     flexDirection: 'row' as any,
     flexWrap: 'wrap' as any,
-    gap: 24,
+    gap: 20,
     justifyContent: 'space-between',
   },
   featureCard: {
     flex: 1,
     minWidth: 300,
-    padding: 32,
-    backgroundColor: '#f8f9fa',
-    borderRadius: 12,
+    padding: 28,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: '#f0f0f0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  featureCardPressed: {
+    backgroundColor: '#f0f0f0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
   },
   featureIcon: {
     marginBottom: 16,
   },
-  iconText: {
-    fontSize: 40,
-  },
   featureTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: 12,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 10,
   },
   featureDescription: {
-    fontSize: 14,
+    fontSize: 15,
     color: '#666',
     lineHeight: 22,
+    fontWeight: '400',
+  },
+
+  viewAllButtonContainer: {
+    alignItems: 'center' as any,
+    marginTop: 48,
+  },
+  viewAllButton: {
+    flexDirection: 'row' as any,
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 28,
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#007AFF',
+    backgroundColor: '#f0f7ff',
+  },
+  viewAllButtonPressed: {
+    backgroundColor: '#e8f0ff',
+  },
+  viewAllButtonText: {
+    color: '#007AFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  // Product Showcase Section
+  productShowcaseSection: {
+    paddingVertical: 80,
+    paddingHorizontal: 24,
+    backgroundColor: '#f9f9f9',
+  },
+  productShowcaseContent: {
+    flexDirection: 'row' as any,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 80,
+    maxWidth: 1400,
+    marginHorizontal: 'auto' as any,
+    width: '100%',
+  },
+  productTextContent: {
+    flex: 0.45,
+    minWidth: 300,
+  },
+  productTitle: {
+    fontSize: 48,
+    fontWeight: '800',
+    color: '#000',
+    marginBottom: 16,
+    letterSpacing: -1.5,
+    lineHeight: 56,
+  },
+  productSubtitle: {
+    fontSize: 18,
+    color: '#007AFF',
+    fontWeight: '600',
+    marginBottom: 20,
+    lineHeight: 28,
+  },
+  productDescription: {
+    fontSize: 16,
+    color: '#666',
+    lineHeight: 28,
+    marginBottom: 32,
+    fontWeight: '400',
+  },
+  productFeatures: {
+    gap: 16,
+  },
+  productFeature: {
+    flexDirection: 'row' as any,
+    alignItems: 'center',
+    gap: 14,
+  },
+  productFeatureText: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: '500',
+    lineHeight: 24,
+  },
+  productImageContainer: {
+    flex: 0.55,
+    minHeight: 420,
+  },
+  productImage: {
+    width: '100%',
+    height: 420,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 16,
+    elevation: 5,
   },
 
   // How It Works Section
   howItWorksSection: {
     paddingVertical: 80,
     paddingHorizontal: 24,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f9f9f9',
   },
   stepsContainer: {
     flexDirection: 'row' as any,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 16,
-    marginTop: 56,
+    gap: 12,
+    marginTop: 48,
     flexWrap: 'wrap' as any,
   },
   step: {
@@ -518,10 +826,15 @@ const styles = StyleSheet.create({
     minWidth: 200,
     padding: 24,
     backgroundColor: '#fff',
-    borderRadius: 12,
+    borderRadius: 16,
     alignItems: 'center' as any,
     borderWidth: 1,
     borderColor: '#f0f0f0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    elevation: 1,
   },
   stepNumber: {
     width: 56,
@@ -539,21 +852,22 @@ const styles = StyleSheet.create({
   },
   stepTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: 8,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 6,
     textAlign: 'center' as any,
   },
   stepDescription: {
     fontSize: 13,
     color: '#666',
     textAlign: 'center' as any,
+    lineHeight: 20,
   },
   arrow: {
-    marginHorizontal: 8,
+    marginHorizontal: 6,
   },
   arrowText: {
-    fontSize: 24,
+    fontSize: 22,
     color: '#007AFF',
     fontWeight: '300',
   },
@@ -573,6 +887,7 @@ const styles = StyleSheet.create({
     color: '#666',
     lineHeight: 26,
     marginBottom: 32,
+    fontWeight: '400',
   },
   benefitsList: {
     gap: 16,
@@ -591,37 +906,40 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     flex: 1,
+    lineHeight: 24,
   },
 
   // CTA Section
   ctaSection: {
     paddingVertical: 80,
     paddingHorizontal: 24,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f9f9f9',
     alignItems: 'center' as any,
   },
   ctaTitle: {
-    fontSize: 44,
-    fontWeight: '700',
-    color: '#1a1a1a',
+    fontSize: 48,
+    fontWeight: '800',
+    color: '#000',
     textAlign: 'center' as any,
-    marginBottom: 16,
+    marginBottom: 12,
+    letterSpacing: -1,
   },
   ctaSubtitle: {
-    fontSize: 18,
+    fontSize: 17,
     color: '#666',
     textAlign: 'center' as any,
     marginBottom: 32,
+    lineHeight: 26,
   },
   ctaButtons: {
     flexDirection: 'row' as any,
-    gap: 16,
+    gap: 12,
   },
   ctaPrimaryButton: {
     backgroundColor: '#007AFF',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 8,
+    paddingHorizontal: 28,
+    paddingVertical: 14,
+    borderRadius: 12,
   },
   ctaPrimaryButtonPressed: {
     backgroundColor: '#0051D5',
@@ -632,14 +950,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   ctaSecondaryButton: {
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: '#007AFF',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 8,
+    paddingHorizontal: 28,
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: '#f0f7ff',
   },
   ctaSecondaryButtonPressed: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#e8f0ff',
   },
   ctaSecondaryButtonText: {
     color: '#007AFF',
@@ -647,52 +966,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // Footer
-  footer: {
-    backgroundColor: '#1a1a1a',
-    paddingVertical: 60,
-    paddingHorizontal: 24,
-  },
-  footerContent: {
-    flexDirection: 'row' as any,
-    gap: 60,
-    marginBottom: 40,
-    flexWrap: 'wrap' as any,
-  },
-  footerSection: {
-    flex: 1,
-    minWidth: 200,
-  },
-  footerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#fff',
-    marginBottom: 8,
-  },
-  footerSectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#fff',
-    marginBottom: 16,
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#999',
-    lineHeight: 22,
-  },
-  footerLink: {
-    fontSize: 14,
-    color: '#999',
-    marginBottom: 12,
-  },
-  footerBottom: {
-    borderTopWidth: 1,
-    borderTopColor: '#333',
-    paddingVertical: 24,
-    alignItems: 'center' as any,
-  },
-  footerBottomText: {
-    fontSize: 12,
-    color: '#666',
-  },
+
 });

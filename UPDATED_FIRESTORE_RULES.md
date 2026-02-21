@@ -2,6 +2,13 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
+    // Helper function to check if user is superadmin
+    function isSuperAdmin() {
+      return request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'superadmin';
+    }
+    
     // Helper function to check if user is admin or superadmin
     function isAdmin() {
       return request.auth != null && 
@@ -12,9 +19,9 @@ service cloud.firestore {
     
     // Helper function to check if user is a collaborator on a project
     function isProjectCollaborator(projectId) {
-      return request.auth != null &&
-        exists(/databases/$(database)/documents/projects/$(projectId)) &&
-        request.auth.uid in get(/databases/$(database)/documents/projects/$(projectId)).data.collaborators.map(c, c.userId);
+      return request.auth != null && 
+        get(/databases/$(database)/documents/projects/$(projectId)).data.collaborators != null &&
+        get(/databases/$(database)/documents/projects/$(projectId)).data.collaborators.any(c, c.userId == request.auth.uid);
     }
 
     // ================================================
@@ -40,11 +47,22 @@ service cloud.firestore {
       // This allows Arduino to check 'up' field
       allow read: if true;
 
-      // Allow creator and collaborators to update/delete projects
-      allow update, delete: if request.auth != null &&
-        (resource.data.userId == request.auth.uid || isProjectCollaborator(projectId));
-      allow create: if request.auth != null &&
-        request.resource.data.userId == request.auth.uid;
+      // Allow ANYONE to update/delete projects (test)
+      allow delete: if true;
+      allow update: if true;
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      
+      // Blocks subcollection - collaborators can add/edit blocks
+      match /blocks/{blockId} {
+        // Allow any authenticated user to read blocks
+        allow read: if request.auth != null;
+        
+        // Allow any authenticated user to create and update blocks
+        allow create, update: if request.auth != null;
+        
+        // Allow any authenticated user to delete blocks
+        allow delete: if request.auth != null;
+      }
     }
     
     // ================================================
