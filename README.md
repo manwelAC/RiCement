@@ -50,17 +50,6 @@ To develop an IoT-based production system with mobile app control that automates
 
 ---
 
-## 📂 Repository Structure
-├── docs/               # Thesis documentation
-├── hardware/           # IoT hardware schematics and code
-├── mobile-app/         # Android application source code
-├── cloud-services/     # Cloud logging and monitoring scripts
-├── ai-module/          # AI prediction models
-└── README.md           # Project overview
-
-
----
-
 ## 🚀 Future Work
 - Expand prototype capacity for industrial-scale production.  
 - Add iOS support for mobile app.  
