@@ -44,9 +44,9 @@ To develop an IoT-based production system with mobile app control that automates
 
 ## 🛠️ Tech Stack
 - **IoT Hardware:** Sensors, motorized mixing unit, dispensing mechanism  
-- **Mobile App:** Android-based control and monitoring interface  
-- **Cloud Services:** Logging, notifications, and production records  
-- **AI Integration:** Hollow block usage prediction per project  
+- **Mobile App:** React Native Expo Go
+- **Cloud Services:** Firebase Firestore  
+- **AI Integration:** Gemini 2.0
 
 ---
 
